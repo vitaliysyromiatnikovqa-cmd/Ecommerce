@@ -1,0 +1,23 @@
+{
+  "name": "e-commerce-learning-project",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Learning e-commerce project with React, Node.js, and layered testing.",
+  "workspaces": [
+    "apps/*",
+    "tests/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace client",
+    "dev:client": "npm run dev --workspace client",
+    "dev:server": "npm run dev --workspace server --if-present",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "format": "npm run format --workspaces --if-present"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
