@@ -1,7 +1,8 @@
-У корені проєкту виконай npm install
-Потім запусти фронт npm run dev:client
-Відкрий у браузері http://localhost:5173
+Після старту:
 
+фронт: http://localhost:5173
+бек: http://localhost:3001/api/health
+БД: localhost:5432
 
 # E-commerce Learning Project
 
