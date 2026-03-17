@@ -8,7 +8,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - '5432:5432'
+      - '127.0.0.1:5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -29,8 +29,11 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    ports:
-      - '3001:3001'
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://127.0.0.1:3001/api/health || exit 1']
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   client:
     build:
@@ -39,11 +42,18 @@ services:
     container_name: novacart-client
     restart: unless-stopped
     environment:
-      VITE_API_PROXY_TARGET: http://server:3001
+      APP_DOMAIN: ${APP_DOMAIN:-localhost}
     depends_on:
-      - server
+      server:
+        condition: service_healthy
     ports:
-      - '5173:5173'
+      - '80:80'
+      - '443:443'
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
 
 volumes:
   postgres_data:
+  caddy_data:
+  caddy_config:

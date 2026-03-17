@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
@@ -10,4 +10,9 @@ RUN npm ci --include=dev --legacy-peer-deps
 
 COPY apps/client ./apps/client
 
-CMD ["npm", "run", "dev", "--workspace", "client", "--", "--host", "0.0.0.0", "--port", "5173"]
+RUN npm run build --workspace client
+
+FROM caddy:2-alpine
+
+COPY apps/client/Caddyfile /etc/caddy/Caddyfile
+COPY --from=builder /app/apps/client/dist /srv

@@ -10,4 +10,8 @@ RUN npm ci --include=dev --legacy-peer-deps
 
 COPY apps/server ./apps/server
 
-CMD ["sh", "-c", "npm run prisma:generate --workspace server && npm run prisma:push --workspace server && npm run start --workspace server"]
+COPY apps/server/docker-entrypoint.sh ./apps/server/docker-entrypoint.sh
+
+RUN chmod +x ./apps/server/docker-entrypoint.sh
+
+CMD ["sh", "./apps/server/docker-entrypoint.sh"]

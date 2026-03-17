@@ -1,0 +1,13 @@
+{$APP_DOMAIN:localhost} {
+	root * /srv
+	encode zstd gzip
+
+	handle /api/* {
+		reverse_proxy server:3001
+	}
+
+	handle {
+		try_files {path} /index.html
+		file_server
+	}
+}
