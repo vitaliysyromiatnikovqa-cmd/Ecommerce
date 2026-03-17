@@ -2,6 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import { randomUUID, scrypt as scryptCallback, timingSafeEqual } from 'node:crypto';
 import { promisify } from 'node:util';
+import { Prisma } from '@prisma/client';
 import { prisma } from './db.js';
 import {
   validateConfirmPassword,
@@ -15,6 +16,14 @@ const port = Number(process.env.PORT ?? 3001);
 
 app.use(cors());
 app.use(express.json());
+
+function serializeUser(user) {
+  return {
+    id: user.id,
+    email: user.email,
+    createdAt: user.createdAt,
+  };
+}
 
 async function hashPassword(password) {
   const salt = randomUUID();
@@ -30,6 +39,18 @@ async function verifyPassword(password, storedHash) {
 
 app.get('/api/health', (_request, response) => {
   response.json({ status: 'ok', database: 'configured' });
+});
+
+app.get('/api/users', async (_request, response) => {
+  const users = await prisma.user.findMany({
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+
+  return response.json({
+    users: users.map(serializeUser),
+  });
 });
 
 app.post('/api/auth/register', async (request, response) => {
@@ -78,10 +99,7 @@ app.post('/api/auth/register', async (request, response) => {
 
   return response.status(201).json({
     message: 'User created successfully',
-    user: {
-      id: user.id,
-      email: user.email,
-    },
+    user: serializeUser(user),
   });
 });
 
@@ -125,11 +143,39 @@ app.post('/api/auth/login', async (request, response) => {
 
   return response.json({
     message: 'Login successful',
-    user: {
-      id: user.id,
-      email: user.email,
-    },
+    user: serializeUser(user),
   });
+});
+
+app.delete('/api/users/:id', async (request, response) => {
+  const { id } = request.params;
+
+  if (!id?.trim()) {
+    return response.status(400).json({
+      message: 'User id is required',
+    });
+  }
+
+  try {
+    const deletedUser = await prisma.user.delete({
+      where: {
+        id: id.trim(),
+      },
+    });
+
+    return response.json({
+      message: 'User deleted successfully',
+      user: serializeUser(deletedUser),
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+      return response.status(404).json({
+        message: 'User not found',
+      });
+    }
+
+    throw error;
+  }
 });
 
 app.use((error, _request, response, _next) => {
