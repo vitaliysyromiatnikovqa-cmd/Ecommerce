@@ -3907,7 +3907,7 @@
                       "pm.test(\"Null email is rejected\", function () {",
                       "    const jsonData = pm.response.json();",
                       "    pm.expect(jsonData.message).to.eql(\"Forgot password failed\");",
-                      "    pm.expect(jsonData.errors.email).to.eql(\"Email must be a string\");",
+                      "    pm.expect(jsonData.errors.email).to.eql(\"Email is required\");",
                       "});"
                     ],
                     "type": "text/javascript",
