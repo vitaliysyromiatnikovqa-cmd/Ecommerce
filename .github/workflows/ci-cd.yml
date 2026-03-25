@@ -66,6 +66,7 @@ jobs:
         run: >
           npx --yes -p newman@6 -p newman-reporter-htmlextra
           newman run docs/postman/GameReason-Auth-final.postman_collection.json
+          --insecure
           --reporters cli,junit,htmlextra
           --reporter-junit-export reports/newman-auth.xml
           --reporter-htmlextra-export reports/newman-auth.html
