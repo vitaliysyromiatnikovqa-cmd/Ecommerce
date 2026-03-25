@@ -1,8 +1,8 @@
 {
-  "name": "e-commerce-learning-project",
+  "name": "gamereason-storefront",
   "version": "1.0.0",
   "private": true,
-  "description": "Learning e-commerce project with React, Node.js, and layered testing.",
+  "description": "GameReason storefront for buying PC games with React, Node.js, and layered testing.",
   "workspaces": [
     "apps/*",
     "tests/*"
@@ -16,6 +16,7 @@
     "prod:up": "docker compose up -d --build",
     "prod:down": "docker compose down",
     "prod:logs": "docker compose logs -f",
+    "test:api:postman": "npx --yes newman@6 run docs/postman/GameReason-Auth-final.postman_collection.json",
     "test": "npm run test --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "format": "npm run format --workspaces --if-present"

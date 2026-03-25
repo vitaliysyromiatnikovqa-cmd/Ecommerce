@@ -3,30 +3,40 @@ import { getSession } from '../lib/auth';
 
 export function HomePage() {
   const session = getSession();
+  const email = session?.user?.email ?? '';
 
   return (
     <section className="hero hero-full-width">
       <div className="hero-copy">
-        <span className="eyebrow">E-commerce starter</span>
-        <h1>Build your first online store flow from login to checkout.</h1>
+        <span className="eyebrow">PC Game Storefront</span>
+        <h1>Buy your next favorite game, deluxe edition, or soundtrack in one place.</h1>
         <p>
-          This starter app begins with authentication screens and will grow into
-          a full learning project with catalog, cart, and orders.
+          GameReason is a digital game marketplace inspired by launcher-style
+          stores, built to grow from auth into catalog, cart, checkout, and
+          personal game library flows.
         </p>
 
         {session ? (
           <div className="status-banner">
-            Signed in as <strong>{session.email}</strong>
+            Signed in to GameReason as <strong>{email}</strong>
           </div>
         ) : null}
 
         <div className="hero-actions">
-          <Link className="primary-button" to="/login">
-            Login
-          </Link>
-          <Link className="secondary-button" to="/register">
-            Register
-          </Link>
+          {session ? (
+            <Link className="primary-button" to="/account">
+              Open Account
+            </Link>
+          ) : (
+            <>
+              <Link className="primary-button" to="/login">
+                Sign In
+              </Link>
+              <Link className="secondary-button" to="/register">
+                Create Account
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </section>

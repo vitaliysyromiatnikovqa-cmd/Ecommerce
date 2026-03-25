@@ -1,6 +1,10 @@
 const forbiddenDomains = ['ru', 'ail.ru', 'mail.ru', 'yandex.ru', 'bk.ru', 'inbox.ru'];
 const passwordAllowedCharacters = /^[A-Za-z\d!@#$%^&*()_\-+=\[{\]};:'",.<>/?\\|`~]+$/;
 
+function isNonEmptyString(value) {
+  return typeof value === 'string' && value.trim() !== '';
+}
+
 function getDomain(email) {
   return email.split('@')[1]?.toLowerCase() ?? '';
 }
@@ -10,7 +14,15 @@ function isForbiddenDomain(domain) {
 }
 
 export function validateEmail(email) {
-  if (!email || !email.trim()) {
+  if (email === undefined || email === null || email === '') {
+    return 'Email is required';
+  }
+
+  if (typeof email !== 'string') {
+    return 'Email must be a string';
+  }
+
+  if (!email.trim()) {
     return 'Email is required';
   }
 
@@ -32,8 +44,12 @@ export function validateEmail(email) {
 }
 
 export function validatePassword(password) {
-  if (!password) {
+  if (password === undefined || password === null || password === '') {
     return 'Password is required';
+  }
+
+  if (typeof password !== 'string') {
+    return 'Password must be a string';
   }
 
   if (password.length < 8) {
@@ -60,8 +76,16 @@ export function validatePassword(password) {
 }
 
 export function validateConfirmPassword(password, confirmPassword) {
-  if (!confirmPassword) {
+  if (confirmPassword === undefined || confirmPassword === null || confirmPassword === '') {
     return 'Confirm password is required';
+  }
+
+  if (typeof confirmPassword !== 'string') {
+    return 'Confirm password must be a string';
+  }
+
+  if (!isNonEmptyString(password)) {
+    return '';
   }
 
   if (password !== confirmPassword) {

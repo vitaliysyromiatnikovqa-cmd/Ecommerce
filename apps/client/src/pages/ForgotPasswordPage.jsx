@@ -1,18 +1,16 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { loginUser } from '../lib/api';
-import { saveSession } from '../lib/auth';
-import { validateLoginForm } from '../lib/validation';
+import { Link } from 'react-router-dom';
+import { forgotPassword } from '../lib/api';
+import { validateForgotPasswordForm } from '../lib/validation';
 
-export function LoginPage() {
-  const navigate = useNavigate();
+export function ForgotPasswordPage() {
   const [values, setValues] = useState({
     email: '',
-    password: '',
   });
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [result, setResult] = useState(null);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -20,6 +18,7 @@ export function LoginPage() {
       ...current,
       [name]: value,
     }));
+    setResult(null);
     setErrors((current) => ({
       ...current,
       [name]: '',
@@ -30,7 +29,7 @@ export function LoginPage() {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    const nextErrors = validateLoginForm(values);
+    const nextErrors = validateForgotPasswordForm(values);
 
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
@@ -41,12 +40,8 @@ export function LoginPage() {
     setFormError('');
 
     try {
-      const response = await loginUser(values);
-      saveSession({
-        accessToken: response.accessToken,
-        user: response.user,
-      });
-      navigate('/account');
+      const response = await forgotPassword(values);
+      setResult(response);
     } catch (error) {
       setErrors(error.fieldErrors || {});
       setFormError(error.message);
@@ -59,9 +54,12 @@ export function LoginPage() {
     <div className="auth-layout">
       <section className="auth-card">
         <div className="auth-copy">
-          <span className="eyebrow">Sign In</span>
-          <h1>Access your GameReason account</h1>
-          <p>Use your email and password to open your game library and storefront access.</p>
+          <span className="eyebrow">Forgot Password</span>
+          <h1>Request a reset token for your GameReason account</h1>
+          <p>
+            Enter your email and we will generate a password reset token for
+            local and API testing.
+          </p>
         </div>
 
         <form className="auth-form" onSubmit={handleSubmit} noValidate>
@@ -80,50 +78,46 @@ export function LoginPage() {
             {errors.email ? <small className="error-text">{errors.email}</small> : null}
           </label>
 
-          <label className="field">
-            <span>Password</span>
-            <input
-              className={errors.password ? 'input-error' : ''}
-              type="password"
-              name="password"
-              placeholder="Enter your password"
-              autoComplete="current-password"
-              value={values.password}
-              onChange={handleChange}
-              aria-invalid={Boolean(errors.password)}
-            />
-            {errors.password ? (
-              <small className="error-text">{errors.password}</small>
-            ) : null}
-          </label>
-
           {formError ? <div className="form-error-banner">{formError}</div> : null}
 
+          {result ? (
+            <div className="status-banner">
+              <div>{result.message}</div>
+              {result.resetToken ? (
+                <div>
+                  Reset token: <strong>{result.resetToken}</strong>
+                </div>
+              ) : null}
+              {result.expiresAt ? <div>Expires at: {result.expiresAt}</div> : null}
+            </div>
+          ) : null}
+
           <button className="primary-button auth-submit" type="submit" disabled={isSubmitting}>
-            {isSubmitting ? 'Signing in...' : 'Sign In'}
+            {isSubmitting ? 'Generating token...' : 'Generate Reset Token'}
           </button>
         </form>
 
         <p className="auth-footer">
-          Don&apos;t have an account? <span>Create one to start building your library.</span>
+          Already know your token? <span>Go straight to password reset.</span>
         </p>
-
-        <p className="auth-footer">
-          Forgot your password? <span>Use the reset flow and get back to your library.</span>
-        </p>
-        <Link className="secondary-button" to="/forgot-password">
-          Forgot Password
-        </Link>
+        {result?.resetToken ? (
+          <Link
+            className="secondary-button"
+            to={`/reset-password?token=${encodeURIComponent(result.resetToken)}`}
+          >
+            Open Reset Password
+          </Link>
+        ) : null}
       </section>
 
       <aside className="auth-side-note">
-        <h2>Welcome back</h2>
+        <h2>Rate limited by design</h2>
         <p>
-          Sign in now to keep your profile, purchases, and future wishlist tied
-          to one GameReason identity.
+          You can create up to three reset requests within thirty seconds. The
+          fourth request is blocked with a rate-limit response.
         </p>
-        <Link className="secondary-button" to="/register">
-          Create Account
+        <Link className="secondary-button" to="/login">
+          Back to Sign In
         </Link>
       </aside>
     </div>

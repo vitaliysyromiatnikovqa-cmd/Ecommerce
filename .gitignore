@@ -21,3 +21,4 @@ Thumbs.db
 .idea/
 .vscode/
 README.md
+docs/ci-cd.local.md

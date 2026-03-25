@@ -1,18 +1,18 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: novacart-postgres
+    container_name: gamereason-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: novacart
+      POSTGRES_DB: gamereason
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
       - '127.0.0.1:5432:5432'
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - gamereason_postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U postgres -d novacart']
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d gamereason']
       interval: 5s
       timeout: 5s
       retries: 10
@@ -21,11 +21,12 @@ services:
     build:
       context: .
       dockerfile: apps/server/Dockerfile
-    container_name: novacart-server
+    container_name: gamereason-server
     restart: unless-stopped
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/novacart?schema=public
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/gamereason?schema=public
       PORT: 3001
+      AUTH_TOKEN_SECRET: ${AUTH_TOKEN_SECRET:-gamereason-dev-secret}
     depends_on:
       postgres:
         condition: service_healthy
@@ -39,7 +40,7 @@ services:
     build:
       context: .
       dockerfile: apps/client/Dockerfile
-    container_name: novacart-client
+    container_name: gamereason-client
     restart: unless-stopped
     environment:
       APP_DOMAIN: ${APP_DOMAIN:-localhost}
@@ -54,6 +55,6 @@ services:
       - caddy_config:/config
 
 volumes:
-  postgres_data:
+  gamereason_postgres_data:
   caddy_data:
   caddy_config:

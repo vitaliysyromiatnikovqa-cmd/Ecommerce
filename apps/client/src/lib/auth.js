@@ -1,4 +1,4 @@
-const STORAGE_KEY = 'novacart-session';
+const STORAGE_KEY = 'gamereason-session';
 
 export function saveSession(session) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
@@ -21,4 +21,8 @@ export function getSession() {
 
 export function clearSession() {
   localStorage.removeItem(STORAGE_KEY);
+}
+
+export function getAccessToken() {
+  return getSession()?.accessToken ?? '';
 }

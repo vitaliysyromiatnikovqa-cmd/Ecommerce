@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import { registerUser } from '../lib/api';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { resetPassword } from '../lib/api';
 import { saveSession } from '../lib/auth';
-import { validateRegisterForm } from '../lib/validation';
+import { validateResetPasswordForm } from '../lib/validation';
 
-export function RegisterPage() {
+export function ResetPasswordPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [values, setValues] = useState({
-    email: '',
+    token: searchParams.get('token') ?? '',
     password: '',
     confirmPassword: '',
   });
@@ -32,7 +32,7 @@ export function RegisterPage() {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    const nextErrors = validateRegisterForm(values);
+    const nextErrors = validateResetPasswordForm(values);
 
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
@@ -43,7 +43,7 @@ export function RegisterPage() {
     setFormError('');
 
     try {
-      const response = await registerUser(values);
+      const response = await resetPassword(values);
       saveSession({
         accessToken: response.accessToken,
         user: response.user,
@@ -61,54 +61,51 @@ export function RegisterPage() {
     <div className="auth-layout">
       <section className="auth-card">
         <div className="auth-copy">
-          <span className="eyebrow">Register</span>
-          <h1>Create your GameReason account</h1>
+          <span className="eyebrow">Reset Password</span>
+          <h1>Set a new password and jump back into GameReason</h1>
           <p>
-            Create a profile to buy games, collect editions, and keep your
-            GameReason library in one place.
+            Paste the reset token, choose a new password, and the platform will
+            sign you in automatically after a successful reset.
           </p>
         </div>
 
-        <form className="auth-form" onSubmit={handleSubmit}>
+        <form className="auth-form" onSubmit={handleSubmit} noValidate>
           <label className="field">
-            <span>Email</span>
+            <span>Reset Token</span>
             <input
-              className={errors.email ? 'input-error' : ''}
-              type="email"
-              name="email"
-              placeholder="Enter your email"
-              autoComplete="email"
-              value={values.email}
+              className={errors.token ? 'input-error' : ''}
+              type="text"
+              name="token"
+              placeholder="Paste your reset token"
+              value={values.token}
               onChange={handleChange}
-              aria-invalid={Boolean(errors.email)}
+              aria-invalid={Boolean(errors.token)}
             />
-            {errors.email ? <small className="error-text">{errors.email}</small> : null}
+            {errors.token ? <small className="error-text">{errors.token}</small> : null}
           </label>
 
           <label className="field">
-            <span>Password</span>
+            <span>New Password</span>
             <input
               className={errors.password ? 'input-error' : ''}
               type="password"
               name="password"
-              placeholder="Create password"
+              placeholder="Create your new password"
               autoComplete="new-password"
               value={values.password}
               onChange={handleChange}
               aria-invalid={Boolean(errors.password)}
             />
-            {errors.password ? (
-              <small className="error-text">{errors.password}</small>
-            ) : null}
+            {errors.password ? <small className="error-text">{errors.password}</small> : null}
           </label>
 
           <label className="field">
-            <span>Confirm Password</span>
+            <span>Confirm New Password</span>
             <input
               className={errors.confirmPassword ? 'input-error' : ''}
               type="password"
               name="confirmPassword"
-              placeholder="Repeat your password"
+              placeholder="Repeat your new password"
               autoComplete="new-password"
               value={values.confirmPassword}
               onChange={handleChange}
@@ -122,23 +119,26 @@ export function RegisterPage() {
           {formError ? <div className="form-error-banner">{formError}</div> : null}
 
           <button className="primary-button auth-submit" type="submit" disabled={isSubmitting}>
-            {isSubmitting ? 'Creating account...' : 'Create Account'}
+            {isSubmitting ? 'Resetting password...' : 'Reset Password'}
           </button>
         </form>
 
         <p className="auth-footer">
-          Already have an account? <span>Sign in and return to the store.</span>
+          Need a new token? <span>Generate another one from the forgot password page.</span>
         </p>
+        <Link className="secondary-button" to="/forgot-password">
+          Request Another Token
+        </Link>
       </section>
 
       <aside className="auth-side-note">
-        <h2>Start your library</h2>
+        <h2>Old tokens are invalidated</h2>
         <p>
-          Registration supports frontend and backend validation, blocked domains,
-          and duplicate email checks before a new player account is created.
+          Every new forgot-password request invalidates previous active reset
+          tokens, so only the latest valid token can be used.
         </p>
         <Link className="secondary-button" to="/login">
-          Go to Sign In
+          Back to Sign In
         </Link>
       </aside>
     </div>
