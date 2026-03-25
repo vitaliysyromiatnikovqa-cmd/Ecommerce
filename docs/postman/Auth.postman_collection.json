@@ -5864,8 +5864,9 @@
                       "  pm.variables.set(\"auth_email\", user.email);",
                       "  pm.collectionVariables.set(\"auth_password\", user.password);",
                       "  pm.variables.set(\"auth_password\", user.password);",
-                      "  pm.collectionVariables.set(\"profile_email\", generateEmail(\"profile\"));",
-                      "  pm.variables.set(\"profile_email\", generateEmail(\"profile\"));",
+                      "  const profileEmail = generateEmail(\"profile\");",
+                      "  pm.collectionVariables.set(\"profile_email\", profileEmail);",
+                      "  pm.variables.set(\"profile_email\", profileEmail);",
                       "})();"
                     ],
                     "type": "text/javascript",
