@@ -1,4 +1,4 @@
-{$APP_DOMAIN:localhost} {
+{$APP_PROTOCOL:http}://{$APP_DOMAIN:localhost} {
 	root * /srv
 	encode zstd gzip
 
