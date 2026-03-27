@@ -8,6 +8,7 @@ export function HomePage() {
   return (
     <section className="hero hero-full-width">
       <div className="hero-copy">
+        <span className="eyebrow">Staging Preview</span>
         <span className="eyebrow">PC Game Storefront</span>
         <h1>Buy your next favorite game, deluxe edition, or soundtrack in one place.</h1>
         <p>

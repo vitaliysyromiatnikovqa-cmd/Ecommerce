@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - staging
   workflow_dispatch:
 
 permissions:
@@ -99,13 +100,61 @@ jobs:
         if: always()
         run: docker compose down -v --remove-orphans
 
-  deploy:
-    name: Deploy To VPS
+  deploy_production:
+    name: Deploy To Production VPS
     needs: ci
     runs-on: ubuntu-latest
     timeout-minutes: 20
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.ENABLE_DEPLOY == 'true'
     environment: production
+
+    steps:
+      - name: Check required deploy secrets
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USERNAME: ${{ secrets.VPS_USERNAME }}
+          VPS_APP_PATH: ${{ secrets.VPS_APP_PATH }}
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+        run: |
+          test -n "$VPS_HOST"
+          test -n "$VPS_USERNAME"
+          test -n "$VPS_APP_PATH"
+          test -n "$VPS_SSH_KEY"
+
+      - name: Configure SSH
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$VPS_SSH_KEY" | tr -d '\r' > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keygen -y -f ~/.ssh/id_ed25519 > /dev/null
+          ssh-keyscan -p "${VPS_PORT:-22}" -H "$VPS_HOST" >> ~/.ssh/known_hosts
+
+      - name: Deploy latest revision
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
+          VPS_USERNAME: ${{ secrets.VPS_USERNAME }}
+          VPS_APP_PATH: ${{ secrets.VPS_APP_PATH }}
+        run: |
+          ssh -p "${VPS_PORT:-22}" "${VPS_USERNAME}@${VPS_HOST}" "
+            set -e
+            cd '${VPS_APP_PATH}'
+            git pull --ff-only
+            docker compose up -d --build
+            docker compose ps
+          "
+
+  deploy_staging:
+    name: Deploy To Staging VPS
+    needs: ci
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    if: github.event_name == 'push' && github.ref == 'refs/heads/staging' && vars.ENABLE_STAGING_DEPLOY == 'true'
+    environment: staging
 
     steps:
       - name: Check required deploy secrets
