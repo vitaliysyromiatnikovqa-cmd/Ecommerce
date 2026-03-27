@@ -234,9 +234,9 @@ jobs:
         env:
           STAGING_BASE_URL: ${{ vars.STAGING_BASE_URL }}
         run: |
-          BASE_URL="${STAGING_BASE_URL:-https://staging.gamereason.sbs:8443}"
+          BASE_URL="${STAGING_BASE_URL:-http://staging.gamereason.sbs:8080}"
           for attempt in {1..30}; do
-            if curl --fail --silent --insecure "$BASE_URL/api/health" > /dev/null; then
+            if curl --fail --silent "$BASE_URL/api/health" > /dev/null; then
               echo "Staging app is healthy at $BASE_URL"
               exit 0
             fi
@@ -251,7 +251,7 @@ jobs:
           npx --yes -p newman@6 -p newman-reporter-htmlextra
           newman run docs/postman/GameReason-Auth-smoke.postman_collection.json
           --insecure
-          --env-var "Domain=${STAGING_BASE_URL:-https://staging.gamereason.sbs:8443}"
+          --env-var "Domain=${STAGING_BASE_URL:-http://staging.gamereason.sbs:8080}"
           --reporters cli,junit,htmlextra
           --reporter-junit-export reports/newman-staging-smoke.xml
           --reporter-htmlextra-export reports/newman-staging-smoke.html
@@ -296,7 +296,7 @@ jobs:
           npx --yes -p newman@6 -p newman-reporter-htmlextra
           newman run docs/postman/GameReason-Auth-final.postman_collection.json
           --insecure
-          --env-var "Domain=${STAGING_BASE_URL:-https://staging.gamereason.sbs:8443}"
+          --env-var "Domain=${STAGING_BASE_URL:-http://staging.gamereason.sbs:8080}"
           --reporters cli,junit,htmlextra
           --reporter-junit-export reports/newman-staging-regression.xml
           --reporter-htmlextra-export reports/newman-staging-regression.html

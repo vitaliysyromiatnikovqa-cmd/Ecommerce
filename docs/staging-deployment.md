@@ -54,5 +54,6 @@ docker compose up -d --build
 ## Notes
 
 - The current setup lets staging and production coexist on one VPS without container-name conflicts.
-- Because both environments need separate published ports, the simplest staging URL is a dedicated port such as `https://staging.gamereason.sbs:8443`.
-- If you want `staging.gamereason.sbs` on standard `443` without a port, add a shared edge proxy later.
+- Because production already owns standard ports `80/443`, the simplest staging URL is `http://staging.gamereason.sbs:8080`.
+- The `8443` port can stay published for future experiments, but it should not be the default public health/test target on a shared single-VPS setup.
+- If you want `https://staging.gamereason.sbs` on standard `443` without a custom port, add a shared edge proxy later.
