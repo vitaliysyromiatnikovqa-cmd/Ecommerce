@@ -16,7 +16,9 @@
     "prod:up": "docker compose up -d --build",
     "prod:down": "docker compose down",
     "prod:logs": "docker compose logs -f",
-    "test:api:postman": "npx --yes newman@6 run docs/postman/GameReason-Auth-final.postman_collection.json",
+    "test:api:smoke": "npx --yes newman@6 run docs/postman/GameReason-Auth-smoke.postman_collection.json",
+    "test:api:regression": "npx --yes newman@6 run docs/postman/GameReason-Auth-final.postman_collection.json",
+    "test:api:postman": "npm run test:api:regression",
     "test": "npm run test --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "format": "npm run format --workspaces --if-present"

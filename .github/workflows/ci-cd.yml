@@ -63,15 +63,26 @@ jobs:
           docker compose logs client
           exit 1
 
-      - name: Run Postman collection with Newman
+      - name: Run local API smoke with Newman
+        run: >
+          npx --yes -p newman@6 -p newman-reporter-htmlextra
+          newman run docs/postman/GameReason-Auth-smoke.postman_collection.json
+          --insecure
+          --reporters cli,junit,htmlextra
+          --reporter-junit-export reports/newman-auth-smoke.xml
+          --reporter-htmlextra-export reports/newman-auth-smoke.html
+          --reporter-htmlextra-title "GameReason Auth Smoke Report"
+          --bail
+
+      - name: Run local API regression with Newman
         run: >
           npx --yes -p newman@6 -p newman-reporter-htmlextra
           newman run docs/postman/GameReason-Auth-final.postman_collection.json
           --insecure
           --reporters cli,junit,htmlextra
-          --reporter-junit-export reports/newman-auth.xml
-          --reporter-htmlextra-export reports/newman-auth.html
-          --reporter-htmlextra-title "GameReason Auth Report"
+          --reporter-junit-export reports/newman-auth-regression.xml
+          --reporter-htmlextra-export reports/newman-auth-regression.html
+          --reporter-htmlextra-title "GameReason Auth Regression Report"
           --bail
 
       - name: Capture Docker logs on failure
@@ -84,8 +95,10 @@ jobs:
         with:
           name: newman-auth-report
           path: |
-            reports/newman-auth.xml
-            reports/newman-auth.html
+            reports/newman-auth-smoke.xml
+            reports/newman-auth-smoke.html
+            reports/newman-auth-regression.xml
+            reports/newman-auth-regression.html
           if-no-files-found: ignore
 
       - name: Upload Docker logs
@@ -195,3 +208,107 @@ jobs:
             docker compose up -d --build
             docker compose ps
           "
+
+  staging_smoke:
+    name: Run Staging API Smoke
+    needs: deploy_staging
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    if: github.event_name == 'push' && github.ref == 'refs/heads/staging' && vars.ENABLE_STAGING_DEPLOY == 'true'
+    environment: staging
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Create reports directory
+        run: mkdir -p reports
+
+      - name: Wait for staging app health
+        env:
+          STAGING_BASE_URL: ${{ vars.STAGING_BASE_URL }}
+        run: |
+          BASE_URL="${STAGING_BASE_URL:-https://staging.gamereason.sbs:8443}"
+          for attempt in {1..30}; do
+            if curl --fail --silent --insecure "$BASE_URL/api/health" > /dev/null; then
+              echo "Staging app is healthy at $BASE_URL"
+              exit 0
+            fi
+            sleep 5
+          done
+          exit 1
+
+      - name: Run staging API smoke with Newman
+        env:
+          STAGING_BASE_URL: ${{ vars.STAGING_BASE_URL }}
+        run: >
+          npx --yes -p newman@6 -p newman-reporter-htmlextra
+          newman run docs/postman/GameReason-Auth-smoke.postman_collection.json
+          --insecure
+          --env-var "Domain=${STAGING_BASE_URL:-https://staging.gamereason.sbs:8443}"
+          --reporters cli,junit,htmlextra
+          --reporter-junit-export reports/newman-staging-smoke.xml
+          --reporter-htmlextra-export reports/newman-staging-smoke.html
+          --reporter-htmlextra-title "GameReason Staging Smoke Report"
+          --bail
+
+      - name: Upload staging smoke report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: newman-staging-smoke-report
+          path: |
+            reports/newman-staging-smoke.xml
+            reports/newman-staging-smoke.html
+          if-no-files-found: ignore
+
+  staging_regression:
+    name: Run Staging API Regression
+    needs: staging_smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: github.event_name == 'push' && github.ref == 'refs/heads/staging' && vars.ENABLE_STAGING_DEPLOY == 'true'
+    environment: staging
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Create reports directory
+        run: mkdir -p reports
+
+      - name: Run staging API regression with Newman
+        env:
+          STAGING_BASE_URL: ${{ vars.STAGING_BASE_URL }}
+        run: >
+          npx --yes -p newman@6 -p newman-reporter-htmlextra
+          newman run docs/postman/GameReason-Auth-final.postman_collection.json
+          --insecure
+          --env-var "Domain=${STAGING_BASE_URL:-https://staging.gamereason.sbs:8443}"
+          --reporters cli,junit,htmlextra
+          --reporter-junit-export reports/newman-staging-regression.xml
+          --reporter-htmlextra-export reports/newman-staging-regression.html
+          --reporter-htmlextra-title "GameReason Staging Regression Report"
+          --bail
+
+      - name: Upload staging regression report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: newman-staging-regression-report
+          path: |
+            reports/newman-staging-regression.xml
+            reports/newman-staging-regression.html
+          if-no-files-found: ignore
