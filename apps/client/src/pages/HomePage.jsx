@@ -8,13 +8,17 @@ export function HomePage() {
   return (
     <section className="hero hero-full-width">
       <div className="hero-copy">
-        <span className="eyebrow">Staging Preview</span>
+        <span className="eyebrow">Staging Preview Environment</span>
         <span className="eyebrow">PC Game Storefront</span>
         <h1>Buy your next favorite game, deluxe edition, or soundtrack in one place.</h1>
         <p>
           GameReason is a digital game marketplace inspired by launcher-style
           stores, built to grow from auth into catalog, cart, checkout, and
           personal game library flows.
+        </p>
+        <p>
+          This staging build is used to verify deploy, smoke, and regression
+          flows before anything reaches production.
         </p>
 
         {session ? (
