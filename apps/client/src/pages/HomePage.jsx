@@ -1,49 +1,240 @@
 import { Link } from 'react-router-dom';
 import { getSession } from '../lib/auth';
 
+const categories = ['All Games', 'PlayStation', 'Xbox', 'Nintendo', 'PC Gaming', 'Accessories', 'Deals'];
+
+const featuredProducts = [
+  {
+    title: 'Retro Wireless Pad',
+    tag: 'Sale',
+    meta: 'PS5',
+    accent: 'product-card-cool',
+  },
+  {
+    title: 'Neon Console Stand',
+    tag: 'Trending',
+    meta: 'Console',
+    accent: 'product-card-neon',
+  },
+  {
+    title: 'Co-op Starter Pack',
+    tag: 'New',
+    meta: 'PC',
+    accent: 'product-card-warm',
+  },
+  {
+    title: 'HyperSound Headset',
+    tag: 'Sale',
+    meta: 'Multi',
+    accent: 'product-card-shadow',
+  },
+];
+
+function BrandIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path
+        d="M7.5 8.5h9a4.5 4.5 0 0 1 4.39 5.47l-.89 4.01a2.5 2.5 0 0 1-4.22 1.25l-1.66-1.56a3 3 0 0 0-4.24 0l-1.66 1.56a2.5 2.5 0 0 1-4.22-1.25l-.89-4.01A4.5 4.5 0 0 1 7.5 8.5Z"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M9 12.25v2.5M7.75 13.5h2.5M15.8 13.1h.01M18 14.7h.01"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
+function SearchIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path
+        d="M10.5 18a7.5 7.5 0 1 1 5.3-2.2L21 21"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
+function CartIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path
+        d="M4 5h2l1.8 8.25a1 1 0 0 0 .98.75h8.74a1 1 0 0 0 .97-.78L20 8H7"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+      <circle cx="10" cy="19" r="1.2" fill="currentColor" />
+      <circle cx="17" cy="19" r="1.2" fill="currentColor" />
+    </svg>
+  );
+}
+
+function UserIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path
+        d="M19 20a7 7 0 1 0-14 0M12 12.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
 export function HomePage() {
   const session = getSession();
   const email = session?.user?.email ?? '';
 
   return (
-    <section className="hero hero-full-width">
-      <div className="hero-copy">
-        <span className="eyebrow">Staging Preview Environment</span>
-        <span className="eyebrow">PC Game Storefront</span>
-        <h1>Buy your next favorite game, deluxe edition, or soundtrack in one place.</h1>
-        <p>
-          GameReason is a digital game marketplace inspired by launcher-style
-          stores, built to grow from auth into catalog, cart, checkout, and
-          personal game library flows.
-        </p>
-        <p>
-          This staging build is used to verify deploy, smoke, and regression
-          flows before anything reaches production.
-        </p>
+    <section className="storefront">
+      <header className="storefront-header">
+        <div className="storefront-header-main">
+          <Link className="storefront-brand" to="/">
+            <span className="storefront-brand-mark">
+              <BrandIcon />
+            </span>
+            <span className="storefront-brand-wordmark">
+              Game<span>Reason</span>
+            </span>
+          </Link>
 
-        {session ? (
-          <div className="status-banner">
-            Signed in to GameReason as <strong>{email}</strong>
-          </div>
-        ) : null}
+          <label className="storefront-search">
+            <span className="storefront-search-icon">
+              <SearchIcon />
+            </span>
+            <input placeholder="Search games, consoles, accessories..." type="search" />
+          </label>
 
-        <div className="hero-actions">
-          {session ? (
-            <Link className="primary-button" to="/account">
-              Open Account
+          <nav className="storefront-actions" aria-label="Store actions">
+            <Link className="storefront-action-link" to="/">
+              <CartIcon />
+              <span>Cart</span>
+              <span className="storefront-pill">3</span>
             </Link>
-          ) : (
-            <>
-              <Link className="primary-button" to="/login">
-                Sign In
+
+            {session ? (
+              <Link className="storefront-action-link" to="/account">
+                <UserIcon />
+                <span>{email.split('@')[0] || 'Account'}</span>
               </Link>
-              <Link className="secondary-button" to="/register">
-                Create Account
-              </Link>
-            </>
-          )}
+            ) : (
+              <>
+                <Link className="storefront-action-link" to="/login">
+                  <UserIcon />
+                  <span>Sign In</span>
+                </Link>
+                <Link className="primary-button storefront-signup" to="/register">
+                  Sign Up
+                </Link>
+              </>
+            )}
+          </nav>
         </div>
-      </div>
+
+        <nav className="storefront-categories" aria-label="Store categories">
+          {categories.map((category) => (
+            <Link key={category} className="storefront-category-link" to="/">
+              {category}
+            </Link>
+          ))}
+        </nav>
+      </header>
+
+      <section className="storefront-hero">
+        <div className="storefront-hero-copy">
+          <span className="storefront-tag">New Arrivals</span>
+          <h1>Level Up Your Gaming Experience</h1>
+          <p>
+            Discover the latest games, consoles, and accessories. Shop with confidence and build
+            your setup around the titles you actually want to keep playing.
+          </p>
+
+          {session ? (
+            <div className="status-banner">
+              Signed in to GameReason as <strong>{email}</strong>
+            </div>
+          ) : null}
+
+          <div className="storefront-hero-actions">
+            <Link className="primary-button" to={session ? '/account' : '/register'}>
+              {session ? 'Open Account' : 'Shop Now'}
+            </Link>
+            <Link className="storefront-ghost-button" to="/login">
+              View Deals
+            </Link>
+          </div>
+
+          <div className="storefront-stats">
+            <div>
+              <strong>500+</strong>
+              <span>Games</span>
+            </div>
+            <div>
+              <strong>50K+</strong>
+              <span>Gamers</span>
+            </div>
+            <div>
+              <strong>4.9★</strong>
+              <span>Rating</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="storefront-hero-visual" aria-hidden="true">
+          <div className="storefront-visual-card">
+            <span className="storefront-visual-chip storefront-visual-chip-top">RGB Setup</span>
+            <span className="storefront-visual-chip storefront-visual-chip-bottom">Hot Deals</span>
+            <div className="storefront-visual-grid" />
+            <div className="storefront-visual-glow storefront-visual-glow-pink" />
+            <div className="storefront-visual-glow storefront-visual-glow-blue" />
+          </div>
+        </div>
+      </section>
+
+      <section className="storefront-products">
+        <div className="storefront-section-head">
+          <div>
+            <h2>Featured Products</h2>
+            <p>Handpicked items just for your setup.</p>
+          </div>
+          <Link className="storefront-inline-cta" to="/">
+            View All →
+          </Link>
+        </div>
+
+        <div className="storefront-product-grid">
+          {featuredProducts.map((product) => (
+            <article key={product.title} className="storefront-product-card">
+              <div className={`storefront-product-media ${product.accent}`}>
+                <span className="storefront-product-tag">{product.tag}</span>
+              </div>
+              <div className="storefront-product-body">
+                <span className="storefront-product-meta">{product.meta}</span>
+                <h3>{product.title}</h3>
+                <p>Curated gear and accessories designed to make your library feel complete.</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
     </section>
   );
 }

@@ -1,4 +1,4 @@
-{$APP_PROTOCOL:http}://{$APP_DOMAIN:localhost} {
+(game_reason_app) {
 	root * /srv
 	encode zstd gzip
 
@@ -10,4 +10,12 @@
 		try_files {path} /index.html
 		file_server
 	}
+}
+
+http://localhost, http://127.0.0.1 {
+	import game_reason_app
+}
+
+{$APP_PROTOCOL:http}://{$APP_DOMAIN:localhost} {
+	import game_reason_app
 }

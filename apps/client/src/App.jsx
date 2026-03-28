@@ -1,4 +1,4 @@
-import { NavLink, Route, Routes } from 'react-router-dom';
+import { NavLink, Route, Routes, useLocation } from 'react-router-dom';
 import { getSession } from './lib/auth';
 import { AccountPage } from './pages/AccountPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
@@ -8,7 +8,13 @@ import { RegisterPage } from './pages/RegisterPage';
 import { ResetPasswordPage } from './pages/ResetPasswordPage';
 
 export default function App() {
+  const location = useLocation();
   const session = getSession();
+  const isAuthRoute = ['/login', '/register', '/forgot-password', '/reset-password'].includes(
+    location.pathname,
+  );
+  const isHomeRoute = location.pathname === '/';
+  const showTopbar = !isAuthRoute && !isHomeRoute;
   const navItems = session
     ? [
         { to: '/', label: 'Home' },
@@ -22,27 +28,37 @@ export default function App() {
 
   return (
     <div className="app-shell">
-      <header className="topbar">
-        <NavLink className="brand" to="/">
-          GameReason
-        </NavLink>
+      {showTopbar ? (
+        <header className="topbar">
+          <NavLink className="brand" to="/">
+            GameReason
+          </NavLink>
 
-        <nav className="topbar-nav" aria-label="Main navigation">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.to}
-              className={({ isActive }) =>
-                isActive ? 'topbar-link topbar-link-active' : 'topbar-link'
-              }
-              to={item.to}
-            >
-              {item.label}
-            </NavLink>
-          ))}
-        </nav>
-      </header>
+          <nav className="topbar-nav" aria-label="Main navigation">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.to}
+                className={({ isActive }) =>
+                  isActive ? 'topbar-link topbar-link-active' : 'topbar-link'
+                }
+                to={item.to}
+              >
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
+        </header>
+      ) : null}
 
-      <main className="page-content">
+      <main
+        className={
+          isAuthRoute
+            ? 'page-content auth-page-content'
+            : isHomeRoute
+              ? 'page-content home-page-content'
+              : 'page-content'
+        }
+      >
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/account" element={<AccountPage />} />

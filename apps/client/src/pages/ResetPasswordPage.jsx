@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { AuthField, AuthShell } from '../components/AuthShell';
 import { resetPassword } from '../lib/api';
 import { saveSession } from '../lib/auth';
 import { validateResetPasswordForm } from '../lib/validation';
@@ -58,89 +59,69 @@ export function ResetPasswordPage() {
   }
 
   return (
-    <div className="auth-layout">
-      <section className="auth-card">
-        <div className="auth-copy">
-          <span className="eyebrow">Reset Password</span>
-          <h1>Set a new password and jump back into GameReason</h1>
-          <p>
-            Paste the reset token, choose a new password, and the platform will
-            sign you in automatically after a successful reset.
-          </p>
-        </div>
-
-        <form className="auth-form" onSubmit={handleSubmit} noValidate>
-          <label className="field">
-            <span>Reset Token</span>
-            <input
-              className={errors.token ? 'input-error' : ''}
-              type="text"
-              name="token"
-              placeholder="Paste your reset token"
-              value={values.token}
-              onChange={handleChange}
-              aria-invalid={Boolean(errors.token)}
-            />
-            {errors.token ? <small className="error-text">{errors.token}</small> : null}
-          </label>
-
-          <label className="field">
-            <span>New Password</span>
-            <input
-              className={errors.password ? 'input-error' : ''}
-              type="password"
-              name="password"
-              placeholder="Create your new password"
-              autoComplete="new-password"
-              value={values.password}
-              onChange={handleChange}
-              aria-invalid={Boolean(errors.password)}
-            />
-            {errors.password ? <small className="error-text">{errors.password}</small> : null}
-          </label>
-
-          <label className="field">
-            <span>Confirm New Password</span>
-            <input
-              className={errors.confirmPassword ? 'input-error' : ''}
-              type="password"
-              name="confirmPassword"
-              placeholder="Repeat your new password"
-              autoComplete="new-password"
-              value={values.confirmPassword}
-              onChange={handleChange}
-              aria-invalid={Boolean(errors.confirmPassword)}
-            />
-            {errors.confirmPassword ? (
-              <small className="error-text">{errors.confirmPassword}</small>
-            ) : null}
-          </label>
-
-          {formError ? <div className="form-error-banner">{formError}</div> : null}
-
-          <button className="primary-button auth-submit" type="submit" disabled={isSubmitting}>
-            {isSubmitting ? 'Resetting password...' : 'Reset Password'}
-          </button>
-        </form>
-
-        <p className="auth-footer">
-          Need a new token? <span>Generate another one from the forgot password page.</span>
+    <AuthShell
+      backTo="/forgot-password"
+      backLabel="Back to Forgot Password"
+      title="Reset Password"
+      subtitle="Paste your reset token and set a fresh password to jump back into GameReason."
+      footer={
+        <p className="auth-helper-text auth-helper-text-centered">
+          Need a new token?{' '}
+          <Link className="auth-inline-link" to="/forgot-password">
+            Request Another Token
+          </Link>
         </p>
-        <Link className="secondary-button" to="/forgot-password">
-          Request Another Token
-        </Link>
-      </section>
+      }
+      panelClassName="auth-panel-wide"
+    >
+      <form className="auth-form" onSubmit={handleSubmit} noValidate>
+        <AuthField
+          label="Reset Token"
+          name="token"
+          type="text"
+          placeholder="Paste your reset token"
+          value={values.token}
+          onChange={handleChange}
+          error={errors.token}
+          icon="token"
+        />
 
-      <aside className="auth-side-note">
-        <h2>Old tokens are invalidated</h2>
-        <p>
-          Every new forgot-password request invalidates previous active reset
-          tokens, so only the latest valid token can be used.
+        <AuthField
+          label="New Password"
+          name="password"
+          type="password"
+          placeholder="Create your new password"
+          autoComplete="new-password"
+          value={values.password}
+          onChange={handleChange}
+          error={errors.password}
+          icon="password"
+          toggleVisibility
+        />
+
+        <AuthField
+          label="Confirm New Password"
+          name="confirmPassword"
+          type="password"
+          placeholder="Repeat your new password"
+          autoComplete="new-password"
+          value={values.confirmPassword}
+          onChange={handleChange}
+          error={errors.confirmPassword}
+          icon="password"
+          toggleVisibility
+        />
+
+        <p className="auth-helper-text">
+          Password must include at least 8 characters, one uppercase letter, one digit, and one special symbol.
         </p>
-        <Link className="secondary-button" to="/login">
-          Back to Sign In
-        </Link>
-      </aside>
-    </div>
+
+        {formError ? <div className="form-error-banner">{formError}</div> : null}
+
+        <button className="primary-button auth-submit auth-submit-wide" type="submit" disabled={isSubmitting}>
+          {isSubmitting ? 'Resetting password...' : 'Reset Password'}
+        </button>
+      </form>
+    </AuthShell>
   );
 }

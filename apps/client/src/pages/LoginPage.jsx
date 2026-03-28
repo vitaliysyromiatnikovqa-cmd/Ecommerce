@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { AuthField, AuthShell } from '../components/AuthShell';
 import { loginUser } from '../lib/api';
 import { saveSession } from '../lib/auth';
 import { validateLoginForm } from '../lib/validation';
@@ -13,6 +14,7 @@ export function LoginPage() {
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -56,76 +58,66 @@ export function LoginPage() {
   }
 
   return (
-    <div className="auth-layout">
-      <section className="auth-card">
-        <div className="auth-copy">
-          <span className="eyebrow">Sign In</span>
-          <h1>Access your GameReason account</h1>
-          <p>Use your email and password to open your game library and storefront access.</p>
+    <AuthShell
+      eyebrow="Welcome Back"
+      title="Welcome Back"
+      subtitle="Sign in to your GameReason account"
+      footer={
+        <p className="auth-helper-text auth-helper-text-centered">
+          Don&apos;t have an account?{' '}
+          <Link className="auth-inline-link" to="/register">
+            Create Account
+          </Link>
+        </p>
+      }
+    >
+      <form className="auth-form" onSubmit={handleSubmit} noValidate>
+        <AuthField
+          label="Email Address"
+          name="email"
+          type="email"
+          placeholder="Enter your email"
+          autoComplete="email"
+          value={values.email}
+          onChange={handleChange}
+          error={errors.email}
+          icon="mail"
+        />
+
+        <AuthField
+          label="Password"
+          name="password"
+          type="password"
+          placeholder="Enter your password"
+          autoComplete="current-password"
+          value={values.password}
+          onChange={handleChange}
+          error={errors.password}
+          icon="password"
+          toggleVisibility
+        />
+
+        <div className="auth-meta-row">
+          <label className="auth-check">
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(event) => setRememberMe(event.target.checked)}
+            />
+            <span>Remember me</span>
+          </label>
+
+          <Link className="auth-inline-link" to="/forgot-password">
+            Forgot Password?
+          </Link>
         </div>
 
-        <form className="auth-form" onSubmit={handleSubmit} noValidate>
-          <label className="field">
-            <span>Email</span>
-            <input
-              className={errors.email ? 'input-error' : ''}
-              type="email"
-              name="email"
-              placeholder="Enter your email"
-              autoComplete="email"
-              value={values.email}
-              onChange={handleChange}
-              aria-invalid={Boolean(errors.email)}
-            />
-            {errors.email ? <small className="error-text">{errors.email}</small> : null}
-          </label>
+        {formError ? <div className="form-error-banner">{formError}</div> : null}
 
-          <label className="field">
-            <span>Password</span>
-            <input
-              className={errors.password ? 'input-error' : ''}
-              type="password"
-              name="password"
-              placeholder="Enter your password"
-              autoComplete="current-password"
-              value={values.password}
-              onChange={handleChange}
-              aria-invalid={Boolean(errors.password)}
-            />
-            {errors.password ? (
-              <small className="error-text">{errors.password}</small>
-            ) : null}
-          </label>
-
-          {formError ? <div className="form-error-banner">{formError}</div> : null}
-
-          <button className="primary-button auth-submit" type="submit" disabled={isSubmitting}>
-            {isSubmitting ? 'Signing in...' : 'Sign In'}
-          </button>
-        </form>
-
-        <p className="auth-footer">
-          Don&apos;t have an account? <span>Create one to start building your library.</span>
-        </p>
-
-        <p className="auth-footer">
-          Forgot your password? <span>Use the reset flow and get back to your library.</span>
-        </p>
-        <Link className="secondary-button" to="/forgot-password">
-          Forgot Password
-        </Link>
-      </section>
-
-      <aside className="auth-side-note">
-        <h2>Welcome back</h2>
-        <p>
-          Sign in now to keep your profile, purchases, and future wishlist tied
-          to one GameReason identity.
-        </p>
-        <Link className="secondary-button" to="/register">
-          Create Account
-        </Link>
-      </aside>
-    </div>
+        <button className="primary-button auth-submit auth-submit-wide" type="submit" disabled={isSubmitting}>
+          {isSubmitting ? 'Signing in...' : 'Sign In'}
+        </button>
+      </form>
+    </AuthShell>
   );
 }
