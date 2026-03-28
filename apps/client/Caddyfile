@@ -12,7 +12,7 @@
 	}
 }
 
-http://localhost, http://127.0.0.1 {
+http://127.0.0.1 {
 	import game_reason_app
 }
 
