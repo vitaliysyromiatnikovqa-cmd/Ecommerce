@@ -156,7 +156,9 @@ jobs:
           ssh -p "${VPS_PORT:-22}" "${VPS_USERNAME}@${VPS_HOST}" "
             set -e
             cd '${VPS_APP_PATH}'
-            git pull --ff-only
+            git fetch origin
+            git checkout main
+            git pull --ff-only origin main
             docker compose up -d --build
             docker compose ps
           "
@@ -204,7 +206,9 @@ jobs:
           ssh -p "${VPS_PORT:-22}" "${VPS_USERNAME}@${VPS_HOST}" "
             set -e
             cd '${VPS_APP_PATH}'
-            git pull --ff-only
+            git fetch origin
+            git checkout staging
+            git pull --ff-only origin staging
             docker compose up -d --build
             docker compose ps
           "
