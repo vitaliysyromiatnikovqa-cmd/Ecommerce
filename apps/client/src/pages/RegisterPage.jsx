@@ -6,6 +6,33 @@ import { registerUser } from '../lib/api';
 import { saveSession } from '../lib/auth';
 import { validateRegisterForm } from '../lib/validation';
 
+function PasswordRulesTooltip() {
+  return (
+    <span className="password-rules-tooltip">
+      <button
+        className="password-rules-trigger"
+        type="button"
+        aria-label="View password rules"
+        data-testid="register-password-rules-trigger"
+      >
+        ?
+      </button>
+      <span
+        className="password-rules-popover"
+        role="tooltip"
+        data-testid="register-password-rules-tooltip"
+      >
+        <strong>Password rules</strong>
+        <span>At least 8 characters</span>
+        <span>At least 1 uppercase English letter</span>
+        <span>At least 1 digit</span>
+        <span>At least 1 special character</span>
+        <span>English letters, digits, and special characters only</span>
+      </span>
+    </span>
+  );
+}
+
 export function RegisterPage() {
   const navigate = useNavigate();
   const [values, setValues] = useState({
@@ -88,6 +115,7 @@ export function RegisterPage() {
 
         <AuthField
           label="Password"
+          labelAdornment={<PasswordRulesTooltip />}
           name="password"
           type="password"
           placeholder="Create your password"

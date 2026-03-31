@@ -145,6 +145,7 @@ function resolveIcon(icon) {
 
 export function AuthField({
   label,
+  labelAdornment,
   name,
   type = 'text',
   placeholder,
@@ -162,7 +163,10 @@ export function AuthField({
 
   return (
     <label className="auth-field">
-      <span className="auth-label">{label}</span>
+      <span className="auth-label-row">
+        <span className="auth-label">{label}</span>
+        {labelAdornment}
+      </span>
       <span className={error ? 'auth-input auth-input-error' : 'auth-input'}>
         <span className="auth-input-icon">{resolveIcon(icon)}</span>
         <input
