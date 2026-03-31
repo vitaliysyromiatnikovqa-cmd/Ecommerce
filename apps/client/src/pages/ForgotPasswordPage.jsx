@@ -60,7 +60,7 @@ export function ForgotPasswordPage() {
       footer={
         <p className="auth-helper-text auth-helper-text-centered">
           Don&apos;t have an account?{' '}
-          <Link className="auth-inline-link" to="/register">
+          <Link className="auth-inline-link" to="/register" data-testid="forgot-password-create-account-link">
             Create Account
           </Link>
         </p>
@@ -77,6 +77,7 @@ export function ForgotPasswordPage() {
           onChange={handleChange}
           error={errors.email}
           icon="mail"
+          testId="forgot-password-email-input"
         />
 
         {formError ? <div className="form-error-banner">{formError}</div> : null}
@@ -94,7 +95,12 @@ export function ForgotPasswordPage() {
           </div>
         ) : null}
 
-        <button className="primary-button auth-submit auth-submit-wide" type="submit" disabled={isSubmitting}>
+        <button
+          className="primary-button auth-submit auth-submit-wide"
+          type="submit"
+          disabled={isSubmitting}
+          data-testid="forgot-password-submit-button"
+        >
           {isSubmitting ? 'Sending reset link...' : 'Send Reset Link'}
         </button>
       </form>
@@ -104,6 +110,7 @@ export function ForgotPasswordPage() {
           <Link
             className="secondary-button auth-submit-wide"
             to={`/reset-password?token=${encodeURIComponent(result.resetToken)}`}
+            data-testid="forgot-password-open-reset-link"
           >
             Open Reset Password
           </Link>

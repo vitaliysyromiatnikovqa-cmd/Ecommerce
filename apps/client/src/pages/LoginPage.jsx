@@ -65,7 +65,7 @@ export function LoginPage() {
       footer={
         <p className="auth-helper-text auth-helper-text-centered">
           Don&apos;t have an account?{' '}
-          <Link className="auth-inline-link" to="/register">
+          <Link className="auth-inline-link" to="/register" data-testid="login-create-account-link">
             Create Account
           </Link>
         </p>
@@ -82,6 +82,7 @@ export function LoginPage() {
           onChange={handleChange}
           error={errors.email}
           icon="mail"
+          testId="login-email-input"
         />
 
         <AuthField
@@ -95,6 +96,8 @@ export function LoginPage() {
           error={errors.password}
           icon="password"
           toggleVisibility
+          testId="login-password-input"
+          toggleTestId="login-password-toggle"
         />
 
         <div className="auth-meta-row">
@@ -103,18 +106,24 @@ export function LoginPage() {
               type="checkbox"
               checked={rememberMe}
               onChange={(event) => setRememberMe(event.target.checked)}
+              data-testid="login-remember-me-checkbox"
             />
             <span>Remember me</span>
           </label>
 
-          <Link className="auth-inline-link" to="/forgot-password">
+          <Link className="auth-inline-link" to="/forgot-password" data-testid="login-forgot-password-link">
             Forgot Password?
           </Link>
         </div>
 
         {formError ? <div className="form-error-banner">{formError}</div> : null}
 
-        <button className="primary-button auth-submit auth-submit-wide" type="submit" disabled={isSubmitting}>
+        <button
+          className="primary-button auth-submit auth-submit-wide"
+          type="submit"
+          disabled={isSubmitting}
+          data-testid="login-submit-button"
+        >
           {isSubmitting ? 'Signing in...' : 'Sign In'}
         </button>
       </form>

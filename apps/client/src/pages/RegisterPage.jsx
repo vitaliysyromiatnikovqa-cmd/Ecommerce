@@ -65,7 +65,7 @@ export function RegisterPage() {
       footer={
         <p className="auth-helper-text auth-helper-text-centered">
           Already have an account?{' '}
-          <Link className="auth-inline-link" to="/login">
+          <Link className="auth-inline-link" to="/login" data-testid="register-sign-in-link">
             Sign In
           </Link>
         </p>
@@ -83,6 +83,7 @@ export function RegisterPage() {
           onChange={handleChange}
           error={errors.email}
           icon="mail"
+          testId="register-email-input"
         />
 
         <AuthField
@@ -96,6 +97,8 @@ export function RegisterPage() {
           error={errors.password}
           icon="password"
           toggleVisibility
+          testId="register-password-input"
+          toggleTestId="register-password-toggle"
         />
 
         <AuthField
@@ -109,11 +112,18 @@ export function RegisterPage() {
           error={errors.confirmPassword}
           icon="password"
           toggleVisibility
+          testId="register-confirm-password-input"
+          toggleTestId="register-confirm-password-toggle"
         />
 
         {formError ? <div className="form-error-banner">{formError}</div> : null}
 
-        <button className="primary-button auth-submit auth-submit-wide" type="submit" disabled={isSubmitting}>
+        <button
+          className="primary-button auth-submit auth-submit-wide"
+          type="submit"
+          disabled={isSubmitting}
+          data-testid="register-submit-button"
+        >
           {isSubmitting ? 'Creating account...' : 'Create Account'}
         </button>
       </form>

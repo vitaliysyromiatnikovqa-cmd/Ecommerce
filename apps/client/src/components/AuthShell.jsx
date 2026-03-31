@@ -154,6 +154,8 @@ export function AuthField({
   autoComplete,
   icon = 'mail',
   toggleVisibility = false,
+  testId,
+  toggleTestId,
 }) {
   const [isVisible, setIsVisible] = useState(false);
   const resolvedType = toggleVisibility ? (isVisible ? 'text' : type) : type;
@@ -171,6 +173,7 @@ export function AuthField({
           value={value}
           onChange={onChange}
           aria-invalid={Boolean(error)}
+          data-testid={testId ?? `auth-input-${name}`}
         />
         {toggleVisibility ? (
           <button
@@ -178,6 +181,7 @@ export function AuthField({
             type="button"
             onClick={() => setIsVisible((current) => !current)}
             aria-label={isVisible ? 'Hide password' : 'Show password'}
+            data-testid={toggleTestId ?? `${testId ?? `auth-input-${name}`}-toggle`}
           >
             <EyeIcon off={isVisible} />
           </button>
@@ -203,7 +207,7 @@ export function AuthShell({
   return (
     <section className="auth-screen">
       <div className="auth-shell">
-        <Link className="auth-brand" to="/">
+        <Link className="auth-brand" to="/" data-testid="auth-brand-link">
           <span className="auth-brand-mark">
             <GamepadIcon />
           </span>
@@ -214,7 +218,7 @@ export function AuthShell({
 
         <div className={panelClass}>
           {backTo && backLabel ? (
-            <Link className="auth-back-link" to={backTo}>
+            <Link className="auth-back-link" to={backTo} data-testid="auth-back-link">
               <ArrowLeftIcon />
               <span>{backLabel}</span>
             </Link>

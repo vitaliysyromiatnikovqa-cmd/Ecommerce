@@ -67,7 +67,7 @@ export function ResetPasswordPage() {
       footer={
         <p className="auth-helper-text auth-helper-text-centered">
           Need a new token?{' '}
-          <Link className="auth-inline-link" to="/forgot-password">
+          <Link className="auth-inline-link" to="/forgot-password" data-testid="reset-password-request-token-link">
             Request Another Token
           </Link>
         </p>
@@ -84,6 +84,7 @@ export function ResetPasswordPage() {
           onChange={handleChange}
           error={errors.token}
           icon="token"
+          testId="reset-password-token-input"
         />
 
         <AuthField
@@ -97,6 +98,8 @@ export function ResetPasswordPage() {
           error={errors.password}
           icon="password"
           toggleVisibility
+          testId="reset-password-password-input"
+          toggleTestId="reset-password-password-toggle"
         />
 
         <AuthField
@@ -110,6 +113,8 @@ export function ResetPasswordPage() {
           error={errors.confirmPassword}
           icon="password"
           toggleVisibility
+          testId="reset-password-confirm-password-input"
+          toggleTestId="reset-password-confirm-password-toggle"
         />
 
         <p className="auth-helper-text">
@@ -118,7 +123,12 @@ export function ResetPasswordPage() {
 
         {formError ? <div className="form-error-banner">{formError}</div> : null}
 
-        <button className="primary-button auth-submit auth-submit-wide" type="submit" disabled={isSubmitting}>
+        <button
+          className="primary-button auth-submit auth-submit-wide"
+          type="submit"
+          disabled={isSubmitting}
+          data-testid="reset-password-submit-button"
+        >
           {isSubmitting ? 'Resetting password...' : 'Reset Password'}
         </button>
       </form>

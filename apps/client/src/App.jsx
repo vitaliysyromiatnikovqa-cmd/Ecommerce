@@ -7,6 +7,10 @@ import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { ResetPasswordPage } from './pages/ResetPasswordPage';
 
+function toTestIdPart(value) {
+  return value === '/' ? 'home' : value.replace(/^\//, '').replace(/[^a-z0-9]+/gi, '-').toLowerCase();
+}
+
 export default function App() {
   const location = useLocation();
   const session = getSession();
@@ -30,7 +34,7 @@ export default function App() {
     <div className="app-shell">
       {showTopbar ? (
         <header className="topbar">
-          <NavLink className="brand" to="/">
+          <NavLink className="brand" to="/" data-testid="topbar-brand-link">
             GameReason
           </NavLink>
 
@@ -42,6 +46,7 @@ export default function App() {
                   isActive ? 'topbar-link topbar-link-active' : 'topbar-link'
                 }
                 to={item.to}
+                data-testid={`topbar-nav-${toTestIdPart(item.to)}-link`}
               >
                 {item.label}
               </NavLink>

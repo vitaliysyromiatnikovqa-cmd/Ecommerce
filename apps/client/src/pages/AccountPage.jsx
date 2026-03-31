@@ -154,6 +154,7 @@ export function AccountPage() {
               value={values.email}
               onChange={handleChange}
               aria-invalid={Boolean(errors.email)}
+              data-testid="account-email-input"
             />
             {errors.email ? <small className="error-text">{errors.email}</small> : null}
           </label>
@@ -161,13 +162,23 @@ export function AccountPage() {
           {formError ? <div className="form-error-banner">{formError}</div> : null}
           {successMessage ? <div className="status-banner">{successMessage}</div> : null}
 
-          <button className="primary-button auth-submit" type="submit" disabled={isSubmitting}>
+          <button
+            className="primary-button auth-submit"
+            type="submit"
+            disabled={isSubmitting}
+            data-testid="account-save-button"
+          >
             {isSubmitting ? 'Saving profile...' : 'Save Profile'}
           </button>
         </form>
 
         <div className="stacked-actions">
-          <button className="secondary-button" type="button" onClick={handleLogout}>
+          <button
+            className="secondary-button"
+            type="button"
+            onClick={handleLogout}
+            data-testid="account-sign-out-button"
+          >
             Sign Out
           </button>
           <button
@@ -175,6 +186,7 @@ export function AccountPage() {
             type="button"
             onClick={handleDeleteAccount}
             disabled={isDeleting}
+            data-testid="account-delete-button"
           >
             {isDeleting ? 'Deleting account...' : 'Delete Account'}
           </button>
@@ -188,7 +200,7 @@ export function AccountPage() {
           here we can later grow into wishlist, order history, and game library
           sections.
         </p>
-        <Link className="secondary-button" to="/">
+        <Link className="secondary-button" to="/" data-testid="account-back-home-link">
           Back to Home
         </Link>
       </aside>
