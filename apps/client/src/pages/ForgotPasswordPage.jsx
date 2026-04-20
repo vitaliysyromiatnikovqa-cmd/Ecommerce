@@ -1,10 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-<<<<<<< Updated upstream
 import { AuthField, AuthShell } from '../components/AuthShell';
-=======
-import { LanguageSwitcher } from '../components/LanguageSwitcher';
->>>>>>> Stashed changes
 import { forgotPassword } from '../lib/api';
 import { localizeApiError, translateKnownMessage, useI18n } from '../lib/i18n';
 import { validateForgotPasswordForm } from '../lib/validation';
@@ -62,7 +58,6 @@ export function ForgotPasswordPage() {
   }
 
   return (
-<<<<<<< Updated upstream
     <AuthShell
       backTo="/login"
       backLabel="Back to Login"
@@ -71,64 +66,13 @@ export function ForgotPasswordPage() {
       footer={
         <p className="auth-helper-text auth-helper-text-centered">
           Don&apos;t have an account?{' '}
-          <Link className="auth-inline-link" to="/register" data-testid="forgot-password-create-account-link">
+          <Link
+            className="auth-inline-link"
+            to="/register"
+            data-testid="forgot-password-create-account-link"
+          >
             Create Account
           </Link>
-=======
-    <div className="auth-layout">
-      <section className="auth-card">
-        <div className="auth-toolbar">
-          <LanguageSwitcher className="page-locale-switcher" />
-        </div>
-
-        <div className="auth-copy">
-          <span className="eyebrow">{t('forgotPassword.eyebrow')}</span>
-          <h1>{t('forgotPassword.title')}</h1>
-          <p>{t('forgotPassword.description')}</p>
-        </div>
-
-        <form className="auth-form" onSubmit={handleSubmit} noValidate>
-          <label className="field">
-            <span>{t('common.email')}</span>
-            <input
-              className={errors.email ? 'input-error' : ''}
-              type="email"
-              name="email"
-              placeholder={t('register.emailPlaceholder')}
-              autoComplete="email"
-              value={values.email}
-              onChange={handleChange}
-              aria-invalid={Boolean(errors.email)}
-            />
-            {errors.email ? <small className="error-text">{errors.email}</small> : null}
-          </label>
-
-          {formError ? <div className="form-error-banner">{formError}</div> : null}
-
-          {result ? (
-            <div className="status-banner">
-              <div>{result.message}</div>
-              {result.resetToken ? (
-                <div>
-                  {t('forgotPassword.tokenLabel')}: <strong>{result.resetToken}</strong>
-                </div>
-              ) : null}
-              {result.expiresAt ? (
-                <div>
-                  {t('forgotPassword.expiresAt')}: {result.expiresAt}
-                </div>
-              ) : null}
-            </div>
-          ) : null}
-
-          <button className="primary-button auth-submit" type="submit" disabled={isSubmitting}>
-            {isSubmitting ? t('forgotPassword.submitting') : t('forgotPassword.submit')}
-          </button>
-        </form>
-
-        <p className="auth-footer">
-          {t('forgotPassword.footerLead')} <span>{t('forgotPassword.footerAccent')}</span>
->>>>>>> Stashed changes
         </p>
       }
     >
@@ -180,22 +124,8 @@ export function ForgotPasswordPage() {
           >
             {t('forgotPassword.openReset')}
           </Link>
-<<<<<<< Updated upstream
         </div>
       ) : null}
     </AuthShell>
-=======
-        ) : null}
-      </section>
-
-      <aside className="auth-side-note">
-        <h2>{t('forgotPassword.sideTitle')}</h2>
-        <p>{t('forgotPassword.sideDescription')}</p>
-        <Link className="secondary-button" to="/login">
-          {t('forgotPassword.sideCta')}
-        </Link>
-      </aside>
-    </div>
->>>>>>> Stashed changes
   );
 }

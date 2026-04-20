@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
-import { getSession } from '../lib/auth';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
-import { useI18n } from '../lib/i18n';
+import { getSession } from '../lib/auth';
 
 const categories = ['All Games', 'PlayStation', 'Xbox', 'Nintendo', 'PC Gaming', 'Accessories', 'Deals'];
 
@@ -106,12 +105,10 @@ function UserIcon() {
 }
 
 export function HomePage() {
-  const { t } = useI18n();
   const session = getSession();
   const email = session?.user?.email ?? '';
 
   return (
-<<<<<<< Updated upstream
     <section className="storefront">
       <header className="storefront-header">
         <div className="storefront-header-main">
@@ -136,6 +133,8 @@ export function HomePage() {
           </label>
 
           <nav className="storefront-actions" aria-label="Store actions">
+            <LanguageSwitcher className="page-locale-switcher" />
+
             <Link className="storefront-action-link" to="/" data-testid="home-cart-link">
               <CartIcon />
               <span>Cart</span>
@@ -159,41 +158,6 @@ export function HomePage() {
               </>
             )}
           </nav>
-=======
-    <section className="hero hero-full-width">
-      <div className="hero-copy">
-        <div className="hero-toolbar">
-          <LanguageSwitcher className="page-locale-switcher" />
-        </div>
-
-        <span className="eyebrow">{t('home.stagingEyebrow')}</span>
-        <span className="eyebrow">{t('home.storefrontEyebrow')}</span>
-        <h1>{t('home.title')}</h1>
-        <p>{t('home.description')}</p>
-        <p>{t('home.stagingDescription')}</p>
-
-        {session ? (
-          <div className="status-banner">
-            {t('home.signedInPrefix')} <strong>{email}</strong>
-          </div>
-        ) : null}
-
-        <div className="hero-actions">
-          {session ? (
-            <Link className="primary-button" to="/account">
-              {t('home.openAccount')}
-            </Link>
-          ) : (
-            <>
-              <Link className="primary-button" to="/login">
-                {t('home.signIn')}
-              </Link>
-              <Link className="secondary-button" to="/register">
-                {t('home.createAccount')}
-              </Link>
-            </>
-          )}
->>>>>>> Stashed changes
         </div>
 
         <nav className="storefront-categories" aria-label="Store categories">
@@ -248,7 +212,7 @@ export function HomePage() {
               <span>Gamers</span>
             </div>
             <div>
-              <strong>4.9★</strong>
+              <strong>4.9/5</strong>
               <span>Rating</span>
             </div>
           </div>
@@ -272,7 +236,7 @@ export function HomePage() {
             <p>Handpicked items just for your setup.</p>
           </div>
           <Link className="storefront-inline-cta" to="/" data-testid="home-view-all-link">
-            View All →
+            View All -&gt;
           </Link>
         </div>
 

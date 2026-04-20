@@ -1,10 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-<<<<<<< Updated upstream
 import { AuthField, AuthShell } from '../components/AuthShell';
-=======
-import { LanguageSwitcher } from '../components/LanguageSwitcher';
->>>>>>> Stashed changes
 import { loginUser } from '../lib/api';
 import { saveSession } from '../lib/auth';
 import { localizeApiError, useI18n } from '../lib/i18n';
@@ -65,7 +61,6 @@ export function LoginPage() {
   }
 
   return (
-<<<<<<< Updated upstream
     <AuthShell
       eyebrow="Welcome Back"
       title="Welcome Back"
@@ -136,79 +131,5 @@ export function LoginPage() {
         </button>
       </form>
     </AuthShell>
-=======
-    <div className="auth-layout">
-      <section className="auth-card">
-        <div className="auth-toolbar">
-          <LanguageSwitcher className="page-locale-switcher" />
-        </div>
-
-        <div className="auth-copy">
-          <span className="eyebrow">{t('login.eyebrow')}</span>
-          <h1>{t('login.title')}</h1>
-          <p>{t('login.description')}</p>
-        </div>
-
-        <form className="auth-form" onSubmit={handleSubmit} noValidate>
-          <label className="field">
-            <span>{t('common.email')}</span>
-            <input
-              className={errors.email ? 'input-error' : ''}
-              type="email"
-              name="email"
-              placeholder={t('login.emailPlaceholder')}
-              autoComplete="email"
-              value={values.email}
-              onChange={handleChange}
-              aria-invalid={Boolean(errors.email)}
-            />
-            {errors.email ? <small className="error-text">{errors.email}</small> : null}
-          </label>
-
-          <label className="field">
-            <span>{t('common.password')}</span>
-            <input
-              className={errors.password ? 'input-error' : ''}
-              type="password"
-              name="password"
-              placeholder={t('login.passwordPlaceholder')}
-              autoComplete="current-password"
-              value={values.password}
-              onChange={handleChange}
-              aria-invalid={Boolean(errors.password)}
-            />
-            {errors.password ? (
-              <small className="error-text">{errors.password}</small>
-            ) : null}
-          </label>
-
-          {formError ? <div className="form-error-banner">{formError}</div> : null}
-
-          <button className="primary-button auth-submit" type="submit" disabled={isSubmitting}>
-            {isSubmitting ? t('login.submitting') : t('login.submit')}
-          </button>
-        </form>
-
-        <p className="auth-footer">
-          {t('login.footerLead')} <span>{t('login.footerAccent')}</span>
-        </p>
-
-        <p className="auth-footer">
-          {t('login.forgotLead')} <span>{t('login.forgotAccent')}</span>
-        </p>
-        <Link className="secondary-button" to="/forgot-password">
-          {t('login.forgotLink')}
-        </Link>
-      </section>
-
-      <aside className="auth-side-note">
-        <h2>{t('login.sideTitle')}</h2>
-        <p>{t('login.sideDescription')}</p>
-        <Link className="secondary-button" to="/register">
-          {t('login.sideCta')}
-        </Link>
-      </aside>
-    </div>
->>>>>>> Stashed changes
   );
 }

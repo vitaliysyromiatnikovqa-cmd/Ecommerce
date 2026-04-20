@@ -182,11 +182,7 @@ export function AccountPage() {
             disabled={isSubmitting}
             data-testid="account-save-button"
           >
-<<<<<<< Updated upstream
-            {isSubmitting ? 'Saving profile...' : 'Save Profile'}
-=======
             {isSubmitting ? t('common.savingProfile') : t('common.saveProfile')}
->>>>>>> Stashed changes
           </button>
         </form>
 
@@ -197,11 +193,7 @@ export function AccountPage() {
             onClick={handleLogout}
             data-testid="account-sign-out-button"
           >
-<<<<<<< Updated upstream
-            Sign Out
-=======
             {t('common.signOut')}
->>>>>>> Stashed changes
           </button>
           <button
             className="danger-button"
@@ -216,21 +208,10 @@ export function AccountPage() {
       </section>
 
       <aside className="auth-side-note">
-<<<<<<< Updated upstream
-        <h2>Your identity hub</h2>
-        <p>
-          This cabinet is the first player profile area for GameReason. From
-          here we can later grow into wishlist, order history, and game library
-          sections.
-        </p>
-        <Link className="secondary-button" to="/" data-testid="account-back-home-link">
-          Back to Home
-=======
         <h2>{t('account.sideTitle')}</h2>
         <p>{t('account.sideDescription')}</p>
-        <Link className="secondary-button" to="/">
+        <Link className="secondary-button" to="/" data-testid="account-back-home-link">
           {t('common.backToHome')}
->>>>>>> Stashed changes
         </Link>
       </aside>
 

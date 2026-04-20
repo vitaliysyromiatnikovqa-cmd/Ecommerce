@@ -1,10 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-<<<<<<< Updated upstream
 import { AuthField, AuthShell } from '../components/AuthShell';
-=======
-import { LanguageSwitcher } from '../components/LanguageSwitcher';
->>>>>>> Stashed changes
 import { resetPassword } from '../lib/api';
 import { saveSession } from '../lib/auth';
 import { localizeApiError, useI18n } from '../lib/i18n';
@@ -66,7 +62,6 @@ export function ResetPasswordPage() {
   }
 
   return (
-<<<<<<< Updated upstream
     <AuthShell
       backTo="/forgot-password"
       backLabel="Back to Forgot Password"
@@ -75,7 +70,11 @@ export function ResetPasswordPage() {
       footer={
         <p className="auth-helper-text auth-helper-text-centered">
           Need a new token?{' '}
-          <Link className="auth-inline-link" to="/forgot-password" data-testid="reset-password-request-token-link">
+          <Link
+            className="auth-inline-link"
+            to="/forgot-password"
+            data-testid="reset-password-request-token-link"
+          >
             Request Another Token
           </Link>
         </p>
@@ -141,89 +140,5 @@ export function ResetPasswordPage() {
         </button>
       </form>
     </AuthShell>
-=======
-    <div className="auth-layout">
-      <section className="auth-card">
-        <div className="auth-toolbar">
-          <LanguageSwitcher className="page-locale-switcher" />
-        </div>
-
-        <div className="auth-copy">
-          <span className="eyebrow">{t('resetPassword.eyebrow')}</span>
-          <h1>{t('resetPassword.title')}</h1>
-          <p>{t('resetPassword.description')}</p>
-        </div>
-
-        <form className="auth-form" onSubmit={handleSubmit} noValidate>
-          <label className="field">
-            <span>{t('common.resetToken')}</span>
-            <input
-              className={errors.token ? 'input-error' : ''}
-              type="text"
-              name="token"
-              placeholder={t('resetPassword.tokenPlaceholder')}
-              value={values.token}
-              onChange={handleChange}
-              aria-invalid={Boolean(errors.token)}
-            />
-            {errors.token ? <small className="error-text">{errors.token}</small> : null}
-          </label>
-
-          <label className="field">
-            <span>{t('common.newPassword')}</span>
-            <input
-              className={errors.password ? 'input-error' : ''}
-              type="password"
-              name="password"
-              placeholder={t('resetPassword.passwordPlaceholder')}
-              autoComplete="new-password"
-              value={values.password}
-              onChange={handleChange}
-              aria-invalid={Boolean(errors.password)}
-            />
-            {errors.password ? <small className="error-text">{errors.password}</small> : null}
-          </label>
-
-          <label className="field">
-            <span>{t('common.confirmNewPassword')}</span>
-            <input
-              className={errors.confirmPassword ? 'input-error' : ''}
-              type="password"
-              name="confirmPassword"
-              placeholder={t('resetPassword.confirmPasswordPlaceholder')}
-              autoComplete="new-password"
-              value={values.confirmPassword}
-              onChange={handleChange}
-              aria-invalid={Boolean(errors.confirmPassword)}
-            />
-            {errors.confirmPassword ? (
-              <small className="error-text">{errors.confirmPassword}</small>
-            ) : null}
-          </label>
-
-          {formError ? <div className="form-error-banner">{formError}</div> : null}
-
-          <button className="primary-button auth-submit" type="submit" disabled={isSubmitting}>
-            {isSubmitting ? t('resetPassword.submitting') : t('resetPassword.submit')}
-          </button>
-        </form>
-
-        <p className="auth-footer">
-          {t('resetPassword.footerLead')} <span>{t('resetPassword.footerAccent')}</span>
-        </p>
-        <Link className="secondary-button" to="/forgot-password">
-          {t('resetPassword.footerCta')}
-        </Link>
-      </section>
-
-      <aside className="auth-side-note">
-        <h2>{t('resetPassword.sideTitle')}</h2>
-        <p>{t('resetPassword.sideDescription')}</p>
-        <Link className="secondary-button" to="/login">
-          {t('resetPassword.sideCta')}
-        </Link>
-      </aside>
-    </div>
->>>>>>> Stashed changes
   );
 }

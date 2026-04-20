@@ -16,15 +16,12 @@ function toTestIdPart(value) {
 export default function App() {
   const location = useLocation();
   const session = getSession();
-<<<<<<< Updated upstream
+  const { t } = useI18n();
   const isAuthRoute = ['/login', '/register', '/forgot-password', '/reset-password'].includes(
     location.pathname,
   );
   const isHomeRoute = location.pathname === '/';
   const showTopbar = !isAuthRoute && !isHomeRoute;
-=======
-  const { t } = useI18n();
->>>>>>> Stashed changes
   const navItems = session
     ? [
         { to: '/', label: t('nav.home') },
@@ -38,48 +35,32 @@ export default function App() {
 
   return (
     <div className="app-shell">
-<<<<<<< Updated upstream
       {showTopbar ? (
         <header className="topbar">
           <NavLink className="brand" to="/" data-testid="topbar-brand-link">
-            GameReason
+            {t('common.brand')}
           </NavLink>
 
-          <nav className="topbar-nav" aria-label="Main navigation">
-=======
-      <header className="topbar">
-        <NavLink className="brand" to="/">
-          {t('common.brand')}
-        </NavLink>
+          <div className="topbar-actions">
+            <nav className="topbar-nav" aria-label={t('nav.mainNavigation')}>
+              {navItems.map((item) => (
+                <NavLink
+                  key={item.to}
+                  className={({ isActive }) =>
+                    isActive ? 'topbar-link topbar-link-active' : 'topbar-link'
+                  }
+                  to={item.to}
+                  data-testid={`topbar-nav-${toTestIdPart(item.to)}-link`}
+                >
+                  {item.label}
+                </NavLink>
+              ))}
+            </nav>
 
-        <div className="topbar-actions">
-          <nav className="topbar-nav" aria-label={t('nav.mainNavigation')}>
->>>>>>> Stashed changes
-            {navItems.map((item) => (
-              <NavLink
-                key={item.to}
-                className={({ isActive }) =>
-                  isActive ? 'topbar-link topbar-link-active' : 'topbar-link'
-                }
-                to={item.to}
-<<<<<<< Updated upstream
-                data-testid={`topbar-nav-${toTestIdPart(item.to)}-link`}
-=======
->>>>>>> Stashed changes
-              >
-                {item.label}
-              </NavLink>
-            ))}
-          </nav>
-<<<<<<< Updated upstream
+            <LanguageSwitcher />
+          </div>
         </header>
       ) : null}
-=======
-
-          <LanguageSwitcher />
-        </div>
-      </header>
->>>>>>> Stashed changes
 
       <main
         className={
