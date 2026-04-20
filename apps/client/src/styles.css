@@ -68,6 +68,15 @@ input {
   flex-wrap: wrap;
 }
 
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
 .topbar-link {
   padding: 10px 14px;
   border-radius: 999px;
@@ -78,6 +87,33 @@ input {
 .topbar-link:hover,
 .topbar-link-active {
   background: rgba(255, 255, 255, 0.08);
+  color: #fff7ec;
+}
+
+.locale-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.locale-button {
+  min-width: 52px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: #c7c1b5;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.locale-button:hover,
+.locale-button-active {
+  background: rgba(255, 149, 67, 0.2);
   color: #fff7ec;
 }
 
@@ -235,6 +271,17 @@ h2 {
   margin-bottom: 28px;
 }
 
+.auth-toolbar,
+.hero-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.page-locale-switcher {
+  margin-left: auto;
+}
+
 .auth-form {
   display: grid;
   gap: 18px;
@@ -302,6 +349,7 @@ h2 {
   gap: 14px;
 }
 
+<<<<<<< Updated upstream
 .auth-screen {
   min-height: calc(100vh - 48px);
   display: flex;
@@ -1048,6 +1096,45 @@ h2 {
 .storefront-product-body p {
   margin: 0;
   color: #aab5cb;
+=======
+.confirm-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(6, 8, 12, 0.74);
+  backdrop-filter: blur(10px);
+}
+
+.confirm-modal {
+  width: min(100%, 460px);
+  padding: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 28px;
+  background: rgba(11, 15, 19, 0.96);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
+}
+
+.confirm-modal h2 {
+  margin-bottom: 12px;
+  font-size: 1.5rem;
+}
+
+.confirm-modal p {
+  margin: 0;
+  color: #c8c2b7;
+}
+
+.confirm-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+>>>>>>> Stashed changes
 }
 
 @media (max-width: 860px) {
@@ -1065,6 +1152,10 @@ h2 {
     padding: 18px;
   }
 
+  .topbar-actions {
+    justify-content: flex-start;
+  }
+
   .hero-copy,
   .hero-panel,
   .auth-card,
@@ -1072,6 +1163,7 @@ h2 {
     padding: 28px;
   }
 
+<<<<<<< Updated upstream
   .auth-screen {
     min-height: auto;
     padding: 24px 0 40px;
@@ -1168,5 +1260,9 @@ h2 {
 
   .storefront-product-grid {
     grid-template-columns: 1fr;
+=======
+  .confirm-modal {
+    padding: 24px;
+>>>>>>> Stashed changes
   }
 }

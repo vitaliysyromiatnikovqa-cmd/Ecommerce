@@ -13,127 +13,193 @@ function isForbiddenDomain(domain) {
   return domain === 'ru' || domain.endsWith('.ru') || forbiddenDomains.includes(domain);
 }
 
-export function validateRegisterForm(values) {
+function message(t, key, fallback) {
+  return typeof t === 'function' ? t(key) : fallback;
+}
+
+export function validateRegisterForm(values, t) {
   const errors = {};
   const email = normalizeString(values.email).trim();
   const password = normalizeString(values.password);
   const confirmPassword = normalizeString(values.confirmPassword);
 
   if (!email) {
-    errors.email = 'Email is required';
+    errors.email = message(t, 'validation.emailRequired', 'Email is required');
   } else if (!email.includes('@')) {
-    errors.email = 'Email must contain @';
+    errors.email = message(t, 'validation.emailMustContainAt', 'Email must contain @');
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    errors.email = 'Invalid email format';
+    errors.email = message(t, 'validation.invalidEmailFormat', 'Invalid email format');
   } else if (isForbiddenDomain(getDomain(email))) {
-    errors.email = 'Registration with this domain is not allowed';
+    errors.email = message(
+      t,
+      'validation.forbiddenDomain',
+      'Registration with this domain is not allowed',
+    );
   }
 
   if (!password) {
-    errors.password = 'Password is required';
+    errors.password = message(t, 'validation.passwordRequired', 'Password is required');
   } else if (password.length < 8) {
-    errors.password = 'Password must be at least 8 characters long';
+    errors.password = message(
+      t,
+      'validation.passwordMinLength',
+      'Password must be at least 8 characters long',
+    );
   } else if (!/[A-Z]/.test(password)) {
-    errors.password = 'Password must contain at least one uppercase English letter';
+    errors.password = message(
+      t,
+      'validation.passwordUppercase',
+      'Password must contain at least one uppercase English letter',
+    );
   } else if (!/\d/.test(password)) {
-    errors.password = 'Password must contain at least one digit';
+    errors.password = message(
+      t,
+      'validation.passwordDigit',
+      'Password must contain at least one digit',
+    );
   } else if (!/[!@#$%^&*()_\-+=\[{\]};:'",.<>/?\\|`~]/.test(password)) {
-    errors.password = 'Password must contain at least one special character';
+    errors.password = message(
+      t,
+      'validation.passwordSpecial',
+      'Password must contain at least one special character',
+    );
   } else if (!passwordAllowedCharacters.test(password)) {
-    errors.password =
-      'Password can contain only English letters, digits, and special characters';
+    errors.password = message(
+      t,
+      'validation.passwordAllowedChars',
+      'Password can contain only English letters, digits, and special characters',
+    );
   }
 
   if (!confirmPassword) {
-    errors.confirmPassword = 'Confirm password is required';
+    errors.confirmPassword = message(
+      t,
+      'validation.confirmPasswordRequired',
+      'Confirm password is required',
+    );
   } else if (confirmPassword !== password) {
-    errors.confirmPassword = 'Passwords do not match';
+    errors.confirmPassword = message(
+      t,
+      'validation.passwordsDoNotMatch',
+      'Passwords do not match',
+    );
   }
 
   return errors;
 }
 
-export function validateLoginForm(values) {
+export function validateLoginForm(values, t) {
   const errors = {};
   const email = normalizeString(values.email).trim();
   const password = normalizeString(values.password);
 
   if (!email) {
-    errors.email = 'Email is required';
+    errors.email = message(t, 'validation.emailRequired', 'Email is required');
   } else if (!email.includes('@')) {
-    errors.email = 'Email must contain @';
+    errors.email = message(t, 'validation.emailMustContainAt', 'Email must contain @');
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    errors.email = 'Invalid email format';
+    errors.email = message(t, 'validation.invalidEmailFormat', 'Invalid email format');
   }
 
   if (!password) {
-    errors.password = 'Password is required';
+    errors.password = message(t, 'validation.passwordRequired', 'Password is required');
   }
 
   return errors;
 }
 
-export function validateForgotPasswordForm(values) {
+export function validateForgotPasswordForm(values, t) {
   const errors = {};
   const email = normalizeString(values.email).trim();
 
   if (!email) {
-    errors.email = 'Email is required';
+    errors.email = message(t, 'validation.emailRequired', 'Email is required');
   } else if (!email.includes('@')) {
-    errors.email = 'Email must contain @';
+    errors.email = message(t, 'validation.emailMustContainAt', 'Email must contain @');
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    errors.email = 'Invalid email format';
+    errors.email = message(t, 'validation.invalidEmailFormat', 'Invalid email format');
   }
 
   return errors;
 }
 
-export function validateResetPasswordForm(values) {
+export function validateResetPasswordForm(values, t) {
   const errors = {};
   const token = normalizeString(values.token).trim();
   const password = normalizeString(values.password);
   const confirmPassword = normalizeString(values.confirmPassword);
 
   if (!token) {
-    errors.token = 'Reset token is required';
+    errors.token = message(t, 'validation.resetTokenRequired', 'Reset token is required');
   }
 
   if (!password) {
-    errors.password = 'Password is required';
+    errors.password = message(t, 'validation.passwordRequired', 'Password is required');
   } else if (password.length < 8) {
-    errors.password = 'Password must be at least 8 characters long';
+    errors.password = message(
+      t,
+      'validation.passwordMinLength',
+      'Password must be at least 8 characters long',
+    );
   } else if (!/[A-Z]/.test(password)) {
-    errors.password = 'Password must contain at least one uppercase English letter';
+    errors.password = message(
+      t,
+      'validation.passwordUppercase',
+      'Password must contain at least one uppercase English letter',
+    );
   } else if (!/\d/.test(password)) {
-    errors.password = 'Password must contain at least one digit';
+    errors.password = message(
+      t,
+      'validation.passwordDigit',
+      'Password must contain at least one digit',
+    );
   } else if (!/[!@#$%^&*()_\-+=\[{\]};:'",.<>/?\\|`~]/.test(password)) {
-    errors.password = 'Password must contain at least one special character';
+    errors.password = message(
+      t,
+      'validation.passwordSpecial',
+      'Password must contain at least one special character',
+    );
   } else if (!passwordAllowedCharacters.test(password)) {
-    errors.password =
-      'Password can contain only English letters, digits, and special characters';
+    errors.password = message(
+      t,
+      'validation.passwordAllowedChars',
+      'Password can contain only English letters, digits, and special characters',
+    );
   }
 
   if (!confirmPassword) {
-    errors.confirmPassword = 'Confirm password is required';
+    errors.confirmPassword = message(
+      t,
+      'validation.confirmPasswordRequired',
+      'Confirm password is required',
+    );
   } else if (confirmPassword !== password) {
-    errors.confirmPassword = 'Passwords do not match';
+    errors.confirmPassword = message(
+      t,
+      'validation.passwordsDoNotMatch',
+      'Passwords do not match',
+    );
   }
 
   return errors;
 }
 
-export function validateProfileForm(values) {
+export function validateProfileForm(values, t) {
   const errors = {};
   const email = normalizeString(values.email).trim();
 
   if (!email) {
-    errors.email = 'Email is required';
+    errors.email = message(t, 'validation.emailRequired', 'Email is required');
   } else if (!email.includes('@')) {
-    errors.email = 'Email must contain @';
+    errors.email = message(t, 'validation.emailMustContainAt', 'Email must contain @');
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    errors.email = 'Invalid email format';
+    errors.email = message(t, 'validation.invalidEmailFormat', 'Invalid email format');
   } else if (isForbiddenDomain(getDomain(email))) {
-    errors.email = 'Registration with this domain is not allowed';
+    errors.email = message(
+      t,
+      'validation.forbiddenDomain',
+      'Registration with this domain is not allowed',
+    );
   }
 
   return errors;
