@@ -1,0 +1,179 @@
+[1mdiff --git a/apps/client/src/App.jsx b/apps/client/src/App.jsx[m
+[1mindex 9938d73..3c74761 100644[m
+[1m--- a/apps/client/src/App.jsx[m
+[1m+++ b/apps/client/src/App.jsx[m
+[36m@@ -1,5 +1,6 @@[m
+ import { NavLink, Route, Routes } from 'react-router-dom';[m
+ import { getSession } from './lib/auth';[m
+[32m+[m[32mimport { useI18n } from './lib/i18n';[m
+ import { AccountPage } from './pages/AccountPage';[m
+ import { ForgotPasswordPage } from './pages/ForgotPasswordPage';[m
+ import { HomePage } from './pages/HomePage';[m
+[36m@@ -9,37 +10,57 @@[m [mimport { ResetPasswordPage } from './pages/ResetPasswordPage';[m
+ [m
+ export default function App() {[m
+   const session = getSession();[m
+[32m+[m[32m  const { locale, setLocale, t } = useI18n();[m
+   const navItems = session[m
+     ? [[m
+[31m-        { to: '/', label: 'Home' },[m
+[31m-        { to: '/account', label: 'Account' },[m
+[32m+[m[32m        { to: '/', label: t('nav.home') },[m
+[32m+[m[32m        { to: '/account', label: t('nav.account') },[m
+       ][m
+     : [[m
+[31m-        { to: '/', label: 'Home' },[m
+[31m-        { to: '/login', label: 'Login' },[m
+[31m-        { to: '/register', label: 'Register' },[m
+[32m+[m[32m        { to: '/', label: t('nav.home') },[m
+[32m+[m[32m        { to: '/login', label: t('nav.login') },[m
+[32m+[m[32m        { to: '/register', label: t('nav.register') },[m
+       ];[m
+ [m
+   return ([m
+     <div className="app-shell">[m
+       <header className="topbar">[m
+         <NavLink className="brand" to="/">[m
+[31m-          GameReason[m
+[32m+[m[32m          {t('app.name')}[m
+         </NavLink>[m
+ [m
+[31m-        <nav className="topbar-nav" aria-label="Main navigation">[m
+[31m-          {navItems.map((item) => ([m
+[31m-            <NavLink[m
+[31m-              key={item.to}[m
+[31m-              className={({ isActive }) =>[m
+[31m-                isActive ? 'topbar-link topbar-link-active' : 'topbar-link'[m
+[31m-              }[m
+[31m-              to={item.to}[m
+[32m+[m[32m        <div className="topbar-actions">[m
+[32m+[m[32m          <nav className="topbar-nav" aria-label={t('app.mainNavigation')}>[m
+[32m+[m[32m            {navItems.map((item) => ([m
+[32m+[m[32m              <NavLink[m
+[32m+[m[32m                key={item.to}[m
+[32m+[m[32m                className={({ isActive }) =>[m
+[32m+[m[32m                  isActive ? 'topbar-link topbar-link-active' : 'topbar-link'[m
+[32m+[m[32m                }[m
+[32m+[m[32m                to={item.to}[m
+[32m+[m[32m              >[m
+[32m+[m[32m                {item.label}[m
+[32m+[m[32m              </NavLink>[m
+[32m+[m[32m            ))}[m
+[32m+[m[32m          </nav>[m
+[32m+[m
+[32m+[m[32m          <div className="language-switcher" aria-label="Language switcher">[m
+[32m+[m[32m            <button[m
+[32m+[m[32m              className={locale === 'uk' ? 'locale-button locale-button-active' : 'locale-button'}[m
+[32m+[m[32m              type="button"[m
+[32m+[m[32m              onClick={() => setLocale('uk')}[m
+[32m+[m[32m            >[m
+[32m+[m[32m              {t('locale.ukrainian')}[m
+[32m+[m[32m            </button>[m
+[32m+[m[32m            <button[m
+[32m+[m[32m              className={locale === 'en' ? 'locale-button locale-button-active' : 'locale-button'}[m
+[32m+[m[32m              type="button"[m
+[32m+[m[32m              onClick={() => setLocale('en')}[m
+             >[m
+[31m-              {item.label}[m
+[31m-            </NavLink>[m
+[31m-          ))}[m
+[31m-        </nav>[m
+[32m+[m[32m              {t('locale.english')}[m
+[32m+[m[32m            </button>[m
+[32m+[m[32m          </div>[m
+[32m+[m[32m        </div>[m
+       </header>[m
+ [m
+       <main className="page-content">[m
+[1mdiff --git a/apps/client/src/lib/api.js b/apps/client/src/lib/api.js[m
+[1mindex 9fd0369..df1eddd 100644[m
+[1m--- a/apps/client/src/lib/api.js[m
+[1m+++ b/apps/client/src/lib/api.js[m
+[36m@@ -1,16 +1,34 @@[m
+ import { getAccessToken } from './auth';[m
+[32m+[m[32mimport { getCurrentLocale, translateRawText } from './i18n';[m
+ [m
+ async function readJson(response) {[m
+   const data = await response.json().catch(() => ({}));[m
+ [m
+   if (!response.ok) {[m
+[31m-    const error = new Error(data.message || 'Request failed');[m
+[32m+[m[32m    const locale = getCurrentLocale();[m
+[32m+[m[32m    const translatedFieldErrors = Object.fromEntries([m
+[32m+[m[32m      Object.entries(data.errors || {}).map(([field, message]) => [[m
+[32m+[m[32m        field,[m
+[32m+[m[32m        translateRawText(message, locale),[m
+[32m+[m[32m      ]),[m
+[32m+[m[32m    );[m
+[32m+[m[32m    const error = new Error(translateRawText(data.message || 'Request failed', locale));[m
+     error.status = response.status;[m
+[31m-    error.fieldErrors = data.errors || {};[m
+[32m+[m[32m    error.fieldErrors = translatedFieldErrors;[m
+     throw error;[m
+   }[m
+ [m
+[31m-  return data;[m
+[32m+[m[32m  const locale = getCurrentLocale();[m
+[32m+[m[32m  return {[m
+[32m+[m[32m    ...data,[m
+[32m+[m[32m    message: translateRawText(data.message, locale),[m
+[32m+[m[32m    errors: Object.fromEntries([m
+[32m+[m[32m      Object.entries(data.errors || {}).map(([field, message]) => [[m
+[32m+[m[32m        field,[m
+[32m+[m[32m        translateRawText(message, locale),[m
+[32m+[m[32m      ]),[m
+[32m+[m[32m    ),[m
+[32m+[m[32m  };[m
+ }[m
+ [m
+ function createJsonRequestOptions(method, payload, authRequired = false) {[m
+[1mdiff --git a/apps/client/src/lib/validation.js b/apps/client/src/lib/validation.js[m
+[1mindex 1e3e4ed..23d6699 100644[m
+[1m--- a/apps/client/src/lib/validation.js[m
+[1m+++ b/apps/client/src/lib/validation.js[m
+[36m@@ -1,6 +1,10 @@[m
+ const forbiddenDomains = ['ru', 'ail.ru', 'mail.ru', 'yandex.ru', 'bk.ru', 'inbox.ru'];[m
+ const passwordAllowedCharacters = /^[A-Za-z\d!@#$%^&*()_\-+=\[{\]};:'",.<>/?\\|`~]+$/;[m
+ [m
+[32m+[m[32mfunction getTranslator(translateText) {[m
+[32m+[m[32m  return typeof translateText === 'function' ? translateText : (text) => text;[m
+[32m+[m[32m}[m
+[32m+[m
+ function normalizeString(value) {[m
+   return typeof value === 'string' ? value : '';[m
+ }[m
+[36m@@ -13,127 +17,134 @@[m [mfunction isForbiddenDomain(domain) {[m
+   return domain === 'ru' || domain.endsWith('.ru') || forbiddenDomains.includes(domain);[m
+ }[m
+ [m
+[31m-export function validateRegisterForm(values) {[m
+[32m+[m[32mexport function validateRegisterForm(values, translateText) {[m
+[32m+[m[32m  const t = getTranslator(translateText);[m
+   const errors = {};[m
+   const email = normalizeString(values.email).trim();[m
+   const password = normalizeString(values.password);[m
+   const confirmPassword = normalizeString(values.confirmPassword);[m
+ [m
+   if (!email) {[m
+[31m-    errors.email = 'Email is required';[m
+[32m+[m[32m    errors.email = t('Email is required');[m
+   } else if (!email.includes('@')) {[m
+[31m-    errors.email = 'Email must contain @';[m
+[32m+[m[32m    errors.email = t('Email must contain @');[m
+   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {[m
+[31m-    errors.email = 'Invalid email format';[m
+[32m+[m[32m    errors.email = t('Invalid email format');[m
+   } else if (isForbiddenDomain(getDomain(email))) {[m
+[31m-    errors.email = 'Registration with this domain is not allowed';[m
+[32m+[m[32m    errors.email = t('Registration with this domain is not allowed');[m
+   }[m
+ [m
+   if (!password) {[m
+[31m-    errors.password = 'Password is required';[m
+[32m+[m[32m    errors.password = t('Password is required');[m
+   } else if (password.length < 8) {[m
+[31m-    errors.password = 'Password must be at least 8 characters long';[m
+[32m+[m[32m    errors.password = t('Password must be at least 8 characters long');[m
+   } else if (!/[A-Z]/.test(password)) {[m
+[31m-    errors.password = 'Password must contain at least one uppercase English letter';[m
+[32m+[m[32m    er

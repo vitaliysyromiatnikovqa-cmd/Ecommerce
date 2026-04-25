@@ -1,7 +1,10 @@
 import { NavLink, Route, Routes, useLocation } from 'react-router-dom';
 import { getSession } from './lib/auth';
 import { useI18n } from './lib/i18n';
+<<<<<<< Updated upstream
 import { LanguageSwitcher } from './components/LanguageSwitcher';
+=======
+>>>>>>> Stashed changes
 import { AccountPage } from './pages/AccountPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { HomePage } from './pages/HomePage';
@@ -16,6 +19,7 @@ function toTestIdPart(value) {
 export default function App() {
   const location = useLocation();
   const session = getSession();
+<<<<<<< Updated upstream
   const { t } = useI18n();
   const isAuthRoute = ['/login', '/register', '/forgot-password', '/reset-password'].includes(
     location.pathname,
@@ -23,6 +27,9 @@ export default function App() {
   const isHomeRoute = location.pathname === '/';
   const isAccountRoute = location.pathname === '/account';
   const showTopbar = !isAuthRoute && !isHomeRoute && !isAccountRoute;
+=======
+  const { locale, setLocale, t } = useI18n();
+>>>>>>> Stashed changes
   const navItems = session
     ? [
         { to: '/', label: t('nav.home') },
@@ -36,6 +43,7 @@ export default function App() {
 
   return (
     <div className="app-shell">
+<<<<<<< Updated upstream
       {showTopbar ? (
         <header className="topbar">
           <NavLink className="brand" to="/" data-testid="topbar-brand-link">
@@ -57,6 +65,46 @@ export default function App() {
                 </NavLink>
               ))}
             </nav>
+=======
+      <header className="topbar">
+        <NavLink className="brand" to="/">
+          {t('app.name')}
+        </NavLink>
+
+        <div className="topbar-actions">
+          <nav className="topbar-nav" aria-label={t('app.mainNavigation')}>
+            {navItems.map((item) => (
+              <NavLink
+                key={item.to}
+                className={({ isActive }) =>
+                  isActive ? 'topbar-link topbar-link-active' : 'topbar-link'
+                }
+                to={item.to}
+              >
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
+
+          <div className="language-switcher" aria-label="Language switcher">
+            <button
+              className={locale === 'uk' ? 'locale-button locale-button-active' : 'locale-button'}
+              type="button"
+              onClick={() => setLocale('uk')}
+            >
+              {t('locale.ukrainian')}
+            </button>
+            <button
+              className={locale === 'en' ? 'locale-button locale-button-active' : 'locale-button'}
+              type="button"
+              onClick={() => setLocale('en')}
+            >
+              {t('locale.english')}
+            </button>
+          </div>
+        </div>
+      </header>
+>>>>>>> Stashed changes
 
             <LanguageSwitcher />
           </div>

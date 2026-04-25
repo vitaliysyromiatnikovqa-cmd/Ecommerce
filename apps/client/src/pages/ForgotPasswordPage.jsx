@@ -2,11 +2,19 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthField, AuthShell } from '../components/AuthShell';
 import { forgotPassword } from '../lib/api';
+<<<<<<< Updated upstream
 import { localizeApiError, translateKnownMessage, useI18n } from '../lib/i18n';
 import { validateForgotPasswordForm } from '../lib/validation';
 
 export function ForgotPasswordPage() {
   const { t } = useI18n();
+=======
+import { useI18n } from '../lib/i18n';
+import { validateForgotPasswordForm } from '../lib/validation';
+
+export function ForgotPasswordPage() {
+  const { t, translateText } = useI18n();
+>>>>>>> Stashed changes
   const [values, setValues] = useState({
     email: '',
   });
@@ -32,7 +40,11 @@ export function ForgotPasswordPage() {
   async function handleSubmit(event) {
     event.preventDefault();
 
+<<<<<<< Updated upstream
     const nextErrors = validateForgotPasswordForm(values, t);
+=======
+    const nextErrors = validateForgotPasswordForm(values, translateText);
+>>>>>>> Stashed changes
 
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
@@ -58,6 +70,7 @@ export function ForgotPasswordPage() {
   }
 
   return (
+<<<<<<< Updated upstream
     <AuthShell
       backTo="/login"
       backLabel="Back to Login"
@@ -66,11 +79,65 @@ export function ForgotPasswordPage() {
       footer={
         <p className="auth-helper-text auth-helper-text-centered">
           Don&apos;t have an account?{' '}
+=======
+    <div className="auth-layout">
+      <section className="auth-card">
+        <div className="auth-copy">
+          <span className="eyebrow">{t('forgotPassword.eyebrow')}</span>
+          <h1>{t('forgotPassword.title')}</h1>
+          <p>{t('forgotPassword.description')}</p>
+        </div>
+
+        <form className="auth-form" onSubmit={handleSubmit} noValidate>
+          <label className="field">
+            <span>{t('common.email')}</span>
+            <input
+              className={errors.email ? 'input-error' : ''}
+              type="email"
+              name="email"
+              placeholder={t('forgotPassword.emailPlaceholder')}
+              autoComplete="email"
+              value={values.email}
+              onChange={handleChange}
+              aria-invalid={Boolean(errors.email)}
+            />
+            {errors.email ? <small className="error-text">{errors.email}</small> : null}
+          </label>
+
+          {formError ? <div className="form-error-banner">{formError}</div> : null}
+
+          {result ? (
+            <div className="status-banner">
+              <div>{result.message}</div>
+              {result.resetToken ? (
+                <div>
+                  {t('forgotPassword.resetTokenLabel')}: <strong>{result.resetToken}</strong>
+                </div>
+              ) : null}
+              {result.expiresAt ? (
+                <div>
+                  {t('forgotPassword.expiresAtLabel')}: {result.expiresAt}
+                </div>
+              ) : null}
+            </div>
+          ) : null}
+
+          <button className="primary-button auth-submit" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? t('forgotPassword.submitting') : t('forgotPassword.submit')}
+          </button>
+        </form>
+
+        <p className="auth-footer">
+          {t('forgotPassword.knowToken')} <span>{t('forgotPassword.knowTokenHighlight')}</span>
+        </p>
+        {result?.resetToken ? (
+>>>>>>> Stashed changes
           <Link
             className="auth-inline-link"
             to="/register"
             data-testid="forgot-password-create-account-link"
           >
+<<<<<<< Updated upstream
             Create Account
           </Link>
         </p>
@@ -127,5 +194,20 @@ export function ForgotPasswordPage() {
         </div>
       ) : null}
     </AuthShell>
+=======
+            {t('forgotPassword.openReset')}
+          </Link>
+        ) : null}
+      </section>
+
+      <aside className="auth-side-note">
+        <h2>{t('forgotPassword.sideTitle')}</h2>
+        <p>{t('forgotPassword.sideDescription')}</p>
+        <Link className="secondary-button" to="/login">
+          {t('common.backToSignIn')}
+        </Link>
+      </aside>
+    </div>
+>>>>>>> Stashed changes
   );
 }
