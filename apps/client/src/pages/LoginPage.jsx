@@ -3,20 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AuthField, AuthShell } from '../components/AuthShell';
 import { loginUser } from '../lib/api';
 import { saveSession } from '../lib/auth';
-<<<<<<< Updated upstream
 import { localizeApiError, useI18n } from '../lib/i18n';
-=======
-import { useI18n } from '../lib/i18n';
->>>>>>> Stashed changes
 import { validateLoginForm } from '../lib/validation';
 
 export function LoginPage() {
   const navigate = useNavigate();
-<<<<<<< Updated upstream
   const { t } = useI18n();
-=======
-  const { t, translateText } = useI18n();
->>>>>>> Stashed changes
   const [values, setValues] = useState({
     email: '',
     password: '',
@@ -42,11 +34,7 @@ export function LoginPage() {
   async function handleSubmit(event) {
     event.preventDefault();
 
-<<<<<<< Updated upstream
     const nextErrors = validateLoginForm(values, t);
-=======
-    const nextErrors = validateLoginForm(values, translateText);
->>>>>>> Stashed changes
 
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
@@ -73,7 +61,6 @@ export function LoginPage() {
   }
 
   return (
-<<<<<<< Updated upstream
     <AuthShell
       shellBackTo="/"
       shellBackLabel="Back to Home"
@@ -145,75 +132,5 @@ export function LoginPage() {
         </button>
       </form>
     </AuthShell>
-=======
-    <div className="auth-layout">
-      <section className="auth-card">
-        <div className="auth-copy">
-          <span className="eyebrow">{t('login.eyebrow')}</span>
-          <h1>{t('login.title')}</h1>
-          <p>{t('login.description')}</p>
-        </div>
-
-        <form className="auth-form" onSubmit={handleSubmit} noValidate>
-          <label className="field">
-            <span>{t('common.email')}</span>
-            <input
-              className={errors.email ? 'input-error' : ''}
-              type="email"
-              name="email"
-              placeholder={t('login.emailPlaceholder')}
-              autoComplete="email"
-              value={values.email}
-              onChange={handleChange}
-              aria-invalid={Boolean(errors.email)}
-            />
-            {errors.email ? <small className="error-text">{errors.email}</small> : null}
-          </label>
-
-          <label className="field">
-            <span>{t('common.password')}</span>
-            <input
-              className={errors.password ? 'input-error' : ''}
-              type="password"
-              name="password"
-              placeholder={t('login.passwordPlaceholder')}
-              autoComplete="current-password"
-              value={values.password}
-              onChange={handleChange}
-              aria-invalid={Boolean(errors.password)}
-            />
-            {errors.password ? (
-              <small className="error-text">{errors.password}</small>
-            ) : null}
-          </label>
-
-          {formError ? <div className="form-error-banner">{formError}</div> : null}
-
-          <button className="primary-button auth-submit" type="submit" disabled={isSubmitting}>
-            {isSubmitting ? t('login.submitting') : t('common.signIn')}
-          </button>
-        </form>
-
-        <p className="auth-footer">
-          {t('login.noAccount')} <span>{t('login.noAccountHighlight')}</span>
-        </p>
-
-        <p className="auth-footer">
-          {t('login.forgotCopy')} <span>{t('login.forgotHighlight')}</span>
-        </p>
-        <Link className="secondary-button" to="/forgot-password">
-          {t('common.forgotPassword')}
-        </Link>
-      </section>
-
-      <aside className="auth-side-note">
-        <h2>{t('login.sideTitle')}</h2>
-        <p>{t('login.sideDescription')}</p>
-        <Link className="secondary-button" to="/register">
-          {t('common.createAccount')}
-        </Link>
-      </aside>
-    </div>
->>>>>>> Stashed changes
   );
 }

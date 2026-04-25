@@ -71,16 +71,10 @@ input {
 .topbar-actions {
   display: flex;
   align-items: center;
-<<<<<<< Updated upstream
   justify-content: flex-end;
   gap: 14px;
   flex: 1;
   flex-wrap: wrap;
-=======
-  gap: 16px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
->>>>>>> Stashed changes
 }
 
 .topbar-link {
@@ -96,7 +90,6 @@ input {
   color: #fff7ec;
 }
 
-<<<<<<< Updated upstream
 .locale-switcher {
   display: inline-flex;
   align-items: center;
@@ -104,22 +97,11 @@ input {
   padding: 4px;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-=======
-.language-switcher {
-  display: inline-flex;
-  padding: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 999px;
->>>>>>> Stashed changes
   background: rgba(255, 255, 255, 0.04);
 }
 
 .locale-button {
-<<<<<<< Updated upstream
   min-width: 52px;
-=======
-  min-width: 62px;
->>>>>>> Stashed changes
   padding: 8px 12px;
   border: none;
   border-radius: 999px;
@@ -129,14 +111,9 @@ input {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-<<<<<<< Updated upstream
 .locale-button:hover,
 .locale-button-active {
   background: rgba(255, 149, 67, 0.2);
-=======
-.locale-button-active {
-  background: rgba(255, 149, 67, 0.18);
->>>>>>> Stashed changes
   color: #fff7ec;
 }
 
@@ -315,74 +292,12 @@ h2 {
 .field {
   display: grid;
   gap: 8px;
-  position: relative;
 }
 
 .field span {
   color: #efe5d8;
   font-size: 0.95rem;
   font-weight: 500;
-}
-
-.field-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.tooltip-anchor {
-  position: relative;
-}
-
-.tooltip-trigger {
-  width: 28px;
-  height: 28px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.04);
-  color: #ffffff;
-  cursor: pointer;
-  font-weight: 700;
-}
-
-.tooltip-bubble {
-  position: absolute;
-  top: calc(100% + 10px);
-  right: 0;
-  width: min(320px, 78vw);
-  padding: 14px 16px;
-  border: 1px solid rgba(255, 149, 67, 0.18);
-  border-radius: 18px;
-  background: rgba(11, 15, 19, 0.95);
-  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.32);
-  color: #f5efe4;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-4px);
-  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
-  z-index: 10;
-}
-
-.tooltip-bubble-visible {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.tooltip-bubble strong {
-  display: block;
-  margin-bottom: 10px;
-}
-
-.tooltip-bubble ul {
-  margin: 0;
-  padding-left: 18px;
-  color: #c8c2b7;
-}
-
-.tooltip-bubble li + li {
-  margin-top: 6px;
 }
 
 .field input {
@@ -436,7 +351,6 @@ h2 {
   gap: 14px;
 }
 
-<<<<<<< Updated upstream
 .auth-screen {
   min-height: 100vh;
   display: flex;
@@ -1218,16 +1132,10 @@ h2 {
   position: fixed;
   inset: 0;
   z-index: 80;
-=======
-.modal-overlay {
-  position: fixed;
-  inset: 0;
->>>>>>> Stashed changes
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
-<<<<<<< Updated upstream
   background: rgba(6, 8, 12, 0.74);
   backdrop-filter: blur(10px);
 }
@@ -1588,33 +1496,6 @@ h2 {
   max-width: 340px;
 }
 
-=======
-  background: rgba(6, 8, 10, 0.72);
-  backdrop-filter: blur(10px);
-  z-index: 20;
-}
-
-.modal-card {
-  width: min(520px, 100%);
-  padding: 28px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 28px;
-  background: rgba(16, 20, 25, 0.96);
-  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.4);
-}
-
-.modal-card p {
-  color: #c8c2b7;
-}
-
-.modal-actions {
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-  margin-top: 24px;
-}
-
->>>>>>> Stashed changes
 @media (max-width: 860px) {
   .app-shell {
     padding: 16px;
@@ -1641,7 +1522,6 @@ h2 {
     padding: 28px;
   }
 
-<<<<<<< Updated upstream
   .auth-screen {
     min-height: auto;
     padding: 24px 0 40px;
@@ -1801,9 +1681,4 @@ h2 {
   .account-tabs {
     gap: 6px;
   }
-=======
-  .field-header {
-    align-items: flex-start;
-  }
->>>>>>> Stashed changes
 }

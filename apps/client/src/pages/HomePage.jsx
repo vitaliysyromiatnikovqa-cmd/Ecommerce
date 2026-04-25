@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
 import { getSession } from '../lib/auth';
-import { useI18n } from '../lib/i18n';
 
 const categories = ['All Games', 'PlayStation', 'Xbox', 'Nintendo', 'PC Gaming', 'Accessories', 'Deals'];
 
@@ -108,10 +107,8 @@ function UserIcon() {
 export function HomePage() {
   const session = getSession();
   const email = session?.user?.email ?? '';
-  const { t } = useI18n();
 
   return (
-<<<<<<< Updated upstream
     <section className="storefront">
       <header className="storefront-header">
         <div className="storefront-header-main">
@@ -161,37 +158,6 @@ export function HomePage() {
               </>
             )}
           </nav>
-=======
-    <section className="hero hero-full-width">
-      <div className="hero-copy">
-        <span className="eyebrow">{t('home.previewEnvironment')}</span>
-        <span className="eyebrow">{t('home.storefront')}</span>
-        <h1>{t('home.title')}</h1>
-        <p>{t('home.description')}</p>
-        <p>{t('home.stagingNote')}</p>
-
-        {session ? (
-          <div className="status-banner">
-            {t('home.signedInAs', { email: '' })} <strong>{email}</strong>
-          </div>
-        ) : null}
-
-        <div className="hero-actions">
-          {session ? (
-            <Link className="primary-button" to="/account">
-              {t('home.openAccount')}
-            </Link>
-          ) : (
-            <>
-              <Link className="primary-button" to="/login">
-                {t('common.signIn')}
-              </Link>
-              <Link className="secondary-button" to="/register">
-                {t('common.createAccount')}
-              </Link>
-            </>
-          )}
->>>>>>> Stashed changes
         </div>
 
         <nav className="storefront-categories" aria-label="Store categories">
