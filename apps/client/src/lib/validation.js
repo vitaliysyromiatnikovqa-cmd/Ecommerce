@@ -14,14 +14,24 @@ function isForbiddenDomain(domain) {
 }
 
 function message(t, key, fallback) {
-  return typeof t === 'function' ? t(key) : fallback;
+  if (typeof t !== 'function') {
+    return fallback;
+  }
+
+  const translated = t(key);
+  return translated === key ? fallback : translated;
 }
 
 export function validateRegisterForm(values, t) {
   const errors = {};
+  const fullName = normalizeString(values.fullName).trim();
   const email = normalizeString(values.email).trim();
   const password = normalizeString(values.password);
   const confirmPassword = normalizeString(values.confirmPassword);
+
+  if (!fullName) {
+    errors.fullName = message(t, 'validation.fullNameRequired', 'Full Name is required');
+  }
 
   if (!email) {
     errors.email = message(t, 'validation.emailRequired', 'Email is required');
@@ -82,6 +92,14 @@ export function validateRegisterForm(values, t) {
       t,
       'validation.passwordsDoNotMatch',
       'Passwords do not match',
+    );
+  }
+
+  if (!values.termsAccepted) {
+    errors.termsAccepted = message(
+      t,
+      'validation.termsRequired',
+      'You must agree to the Terms of Service and Privacy Policy',
     );
   }
 
@@ -199,6 +217,23 @@ export function validateProfileForm(values, t) {
       t,
       'validation.forbiddenDomain',
       'Registration with this domain is not allowed',
+    );
+  }
+
+  return errors;
+}
+
+export function validateAccountProfileForm(values, t) {
+  const errors = {};
+  const phoneNumber = normalizeString(values.phoneNumber).trim();
+
+  if (!phoneNumber) {
+    errors.phoneNumber = message(t, 'validation.phoneRequired', 'Phone Number is required');
+  } else if (!/^\+380\d{9}$/.test(phoneNumber)) {
+    errors.phoneNumber = message(
+      t,
+      'validation.phoneUkraineFormat',
+      'Phone Number must use +380XXXXXXXXX format',
     );
   }
 

@@ -62,7 +62,8 @@ export function LoginPage() {
 
   return (
     <AuthShell
-      eyebrow="Welcome Back"
+      shellBackTo="/"
+      shellBackLabel="Back to Home"
       title="Welcome Back"
       subtitle="Sign in to your GameReason account"
       footer={

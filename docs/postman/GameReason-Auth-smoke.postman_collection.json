@@ -101,7 +101,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"confirmPassword\":\"{{password}}\"\r\n  }",
+                  "raw": "{\r\n  \"fullName\": \"QA API User\",\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"confirmPassword\":\"{{password}}\",\r\n  \"termsAccepted\": true\r\n  }",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -322,7 +322,7 @@
                       "    header: { \"Content-Type\": \"application/json\" },",
                       "    body: {",
                       "      mode: \"raw\",",
-                      "      raw: JSON.stringify({ email, password, confirmPassword: password })",
+                      "      raw: JSON.stringify({ fullName: \"QA API User\", email, password, confirmPassword: password, termsAccepted: true })",
                       "    }",
                       "  });",
                       "  pm.expect(response.code).to.eql(201);",
@@ -679,7 +679,7 @@
                       "    header: { \"Content-Type\": \"application/json\" },",
                       "    body: {",
                       "      mode: \"raw\",",
-                      "      raw: JSON.stringify({ email, password, confirmPassword: password })",
+                      "      raw: JSON.stringify({ fullName: \"QA API User\", email, password, confirmPassword: password, termsAccepted: true })",
                       "    }",
                       "  });",
                       "  pm.expect(response.code).to.eql(201);",
@@ -853,7 +853,7 @@
                       "    header: { \"Content-Type\": \"application/json\" },",
                       "    body: {",
                       "      mode: \"raw\",",
-                      "      raw: JSON.stringify({ email, password, confirmPassword: password })",
+                      "      raw: JSON.stringify({ fullName: \"QA API User\", email, password, confirmPassword: password, termsAccepted: true })",
                       "    }",
                       "  });",
                       "  pm.expect(response.code).to.eql(201);",
@@ -1031,7 +1031,7 @@
                       "    header: { \"Content-Type\": \"application/json\" },",
                       "    body: {",
                       "      mode: \"raw\",",
-                      "      raw: JSON.stringify({ email, password, confirmPassword: password })",
+                      "      raw: JSON.stringify({ fullName: \"QA API User\", email, password, confirmPassword: password, termsAccepted: true })",
                       "    }",
                       "  });",
                       "  pm.expect(response.code).to.eql(201);",
@@ -1200,7 +1200,7 @@
                       "    header: { \"Content-Type\": \"application/json\" },",
                       "    body: {",
                       "      mode: \"raw\",",
-                      "      raw: JSON.stringify({ email, password, confirmPassword: password })",
+                      "      raw: JSON.stringify({ fullName: \"QA API User\", email, password, confirmPassword: password, termsAccepted: true })",
                       "    }",
                       "  });",
                       "  pm.expect(response.code).to.eql(201);",

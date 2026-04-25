@@ -37,19 +37,21 @@ export function RegisterPage() {
   const navigate = useNavigate();
   const { t } = useI18n();
   const [values, setValues] = useState({
+    fullName: '',
     email: '',
     password: '',
     confirmPassword: '',
+    termsAccepted: false,
   });
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   function handleChange(event) {
-    const { name, value } = event.target;
+    const { checked, name, type, value } = event.target;
     setValues((current) => ({
       ...current,
-      [name]: value,
+      [name]: type === 'checkbox' ? checked : value,
     }));
     setErrors((current) => ({
       ...current,
@@ -62,6 +64,7 @@ export function RegisterPage() {
     event.preventDefault();
 
     const nextErrors = validateRegisterForm(values, t);
+    const fullName = values.fullName.trim();
 
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
@@ -72,10 +75,22 @@ export function RegisterPage() {
     setFormError('');
 
     try {
-      const response = await registerUser(values);
+      const response = await registerUser({
+        email: values.email,
+        password: values.password,
+        confirmPassword: values.confirmPassword,
+        fullName,
+        termsAccepted: values.termsAccepted,
+      });
+      const [firstName = '', ...lastNameParts] = fullName.split(/\s+/);
+
       saveSession({
         accessToken: response.accessToken,
-        user: response.user,
+        user: {
+          ...response.user,
+          firstName,
+          lastName: lastNameParts.join(' '),
+        },
       });
       navigate('/account');
     } catch (error) {
@@ -89,8 +104,10 @@ export function RegisterPage() {
 
   return (
     <AuthShell
+      shellBackTo="/"
+      shellBackLabel="Back to Home"
       title="Create Account"
-      subtitle="Set up your GameReason profile to start building your library."
+      subtitle="Join GameReason marketplace today"
       footer={
         <p className="auth-helper-text auth-helper-text-centered">
           Already have an account?{' '}
@@ -102,6 +119,19 @@ export function RegisterPage() {
       panelClassName="auth-panel-wide"
     >
       <form className="auth-form" onSubmit={handleSubmit} noValidate>
+        <AuthField
+          label="Full Name"
+          name="fullName"
+          type="text"
+          placeholder="Enter your full name"
+          autoComplete="name"
+          value={values.fullName}
+          onChange={handleChange}
+          error={errors.fullName}
+          icon="user"
+          testId="register-full-name-input"
+        />
+
         <AuthField
           label="Email Address"
           name="email"
@@ -145,6 +175,32 @@ export function RegisterPage() {
           testId="register-confirm-password-input"
           toggleTestId="register-confirm-password-toggle"
         />
+
+        <label className={errors.termsAccepted ? 'auth-check auth-terms auth-terms-error' : 'auth-check auth-terms'}>
+          <input
+            type="checkbox"
+            name="termsAccepted"
+            checked={values.termsAccepted}
+            onChange={handleChange}
+            aria-invalid={Boolean(errors.termsAccepted)}
+            data-testid="register-terms-checkbox"
+          />
+          <span>
+            I agree to the{' '}
+            <Link className="auth-inline-link" to="/terms" data-testid="register-terms-link">
+              Terms of Service
+            </Link>{' '}
+            and{' '}
+            <Link className="auth-inline-link" to="/privacy" data-testid="register-privacy-link">
+              Privacy Policy
+            </Link>
+          </span>
+        </label>
+        {errors.termsAccepted ? (
+          <small className="error-text" data-testid="register-terms-error">
+            {errors.termsAccepted}
+          </small>
+        ) : null}
 
         {formError ? <div className="form-error-banner">{formError}</div> : null}
 

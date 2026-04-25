@@ -21,7 +21,8 @@ export default function App() {
     location.pathname,
   );
   const isHomeRoute = location.pathname === '/';
-  const showTopbar = !isAuthRoute && !isHomeRoute;
+  const isAccountRoute = location.pathname === '/account';
+  const showTopbar = !isAuthRoute && !isHomeRoute && !isAccountRoute;
   const navItems = session
     ? [
         { to: '/', label: t('nav.home') },
