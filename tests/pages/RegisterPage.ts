@@ -10,6 +10,9 @@ export class RegisterPage extends BasePage {
   }
 
   // --- Локатори ---
+  get fullNameInput(): Locator {
+    return this.page.getByTestId('register-full-name-input')
+  }
   get emailInput(): Locator {
     return this.page.getByTestId('register-email-input')
   }
@@ -38,7 +41,10 @@ export class RegisterPage extends BasePage {
     return this.page.getByTestId('register-sign-in-link')
               
   }   
-
+  get agreeCheckbox (): Locator {
+    return this.page.getByTestId('register-terms-checkbox')
+              
+  }   
   get errorMessages(): Locator {
   return this.page.locator('.error-text');
 }
@@ -69,9 +75,11 @@ get confirmPasswordError(): Locator {
   
 async expectRequiredErrors() {
   await expect(this.errorMessages).toHaveText([
+    'Full Name is required',
     'Email is required',
     'Password is required',
     'Confirm password is required',
+    'You must agree to the Terms of Service and Privacy Policy'
   ]);
 }
 async expectPasswordToolTip() {
