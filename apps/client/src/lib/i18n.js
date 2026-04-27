@@ -2,290 +2,191 @@ import { createContext, createElement, useContext, useEffect, useMemo, useState 
 
 export const DEFAULT_LOCALE = 'en';
 export const SUPPORTED_LOCALES = ['en', 'uk'];
+
 const LOCALE_STORAGE_KEY = 'gamereason-locale';
 
 const translations = {
   en: {
-    app: {
-      name: 'GameReason',
-      mainNavigation: 'Main navigation',
-    },
     nav: {
       home: 'Home',
       account: 'Account',
       login: 'Login',
       register: 'Register',
+      mainNavigation: 'Main navigation',
     },
-    locale: {
-      english: 'ENG',
-      ukrainian: 'UKR',
+    language: {
+      switcher: 'Language switcher',
+      uk: 'UKR',
+      en: 'ENG',
     },
     common: {
-      email: 'Email',
-      password: 'Password',
-      confirmPassword: 'Confirm Password',
+      brand: 'GameReason',
       signIn: 'Sign In',
       createAccount: 'Create Account',
-      forgotPassword: 'Forgot Password',
       backToHome: 'Back to Home',
       backToSignIn: 'Back to Sign In',
-      saveProfile: 'Save Profile',
-      savingProfile: 'Saving profile...',
       signOut: 'Sign Out',
       deleteAccount: 'Delete Account',
       deletingAccount: 'Deleting account...',
-      cancel: 'Cancel',
-      confirm: 'Confirm',
-    },
-    home: {
-      previewEnvironment: 'Staging Preview Environment',
-      storefront: 'PC Game Storefront',
-      title: 'Buy your next favorite game, deluxe edition, or soundtrack in one place.',
-      description:
-        'GameReason is a digital game marketplace inspired by launcher-style stores, built to grow from auth into catalog, cart, checkout, and personal game library flows.',
-      stagingNote:
-        'This staging build is used to verify deploy, smoke, and regression flows before anything reaches production.',
-      signedInAs: 'Signed in to GameReason as {email}',
-      openAccount: 'Open Account',
-    },
-    login: {
-      eyebrow: 'Sign In',
-      title: 'Access your GameReason account',
-      description:
-        'Use your email and password to open your game library and storefront access.',
-      emailPlaceholder: 'Enter your email',
-      passwordPlaceholder: 'Enter your password',
-      submitting: 'Signing in...',
-      noAccount: "Don't have an account?",
-      noAccountHighlight: 'Create one to start building your library.',
-      forgotCopy: 'Forgot your password?',
-      forgotHighlight: 'Use the reset flow and get back to your library.',
-      sideTitle: 'Welcome back',
-      sideDescription:
-        'Sign in now to keep your profile, purchases, and future wishlist tied to one GameReason identity.',
-    },
-    register: {
-      eyebrow: 'Register',
-      title: 'Create your GameReason account',
-      description:
-        'Create a profile to buy games, collect editions, and keep your GameReason library in one place.',
-      emailPlaceholder: 'Enter your email',
-      passwordPlaceholder: 'Create password',
-      confirmPasswordPlaceholder: 'Repeat your password',
-      submitting: 'Creating account...',
-      existingAccount: 'Already have an account?',
-      existingAccountHighlight: 'Sign in and return to the store.',
-      sideTitle: 'Start your library',
-      sideDescription:
-        'Registration supports frontend and backend validation, blocked domains, and duplicate email checks before a new player account is created.',
-      goToSignIn: 'Go to Sign In',
-      passwordRules: 'Password rules',
-      passwordRuleMinLength: 'At least 8 characters',
-      passwordRuleUppercase: 'At least 1 uppercase English letter',
-      passwordRuleDigit: 'At least 1 digit',
-      passwordRuleSpecial: 'At least 1 special character',
-      passwordRuleCharset: 'English letters, digits, and special characters only',
+      saveProfile: 'Save Profile',
+      savingProfile: 'Saving profile...',
     },
     forgotPassword: {
-      eyebrow: 'Forgot Password',
-      title: 'Request a reset token for your GameReason account',
-      description:
-        'Enter your email and we will generate a password reset token for local and API testing.',
-      emailPlaceholder: 'Enter your email',
-      resetTokenLabel: 'Reset token',
-      expiresAtLabel: 'Expires at',
-      submitting: 'Generating token...',
-      submit: 'Generate Reset Token',
-      knowToken: 'Already know your token?',
-      knowTokenHighlight: 'Go straight to password reset.',
       openReset: 'Open Reset Password',
-      sideTitle: 'Rate limited by design',
-      sideDescription:
-        'You can create up to three reset requests within thirty seconds. The fourth request is blocked with a rate-limit response.',
-    },
-    resetPassword: {
-      eyebrow: 'Reset Password',
-      title: 'Set a new password and jump back into GameReason',
-      description:
-        'Paste the reset token, choose a new password, and the platform will sign you in automatically after a successful reset.',
-      token: 'Reset Token',
-      tokenPlaceholder: 'Paste your reset token',
-      newPassword: 'New Password',
-      newPasswordPlaceholder: 'Create your new password',
-      confirmNewPassword: 'Confirm New Password',
-      confirmNewPasswordPlaceholder: 'Repeat your new password',
-      submitting: 'Resetting password...',
-      submit: 'Reset Password',
-      needToken: 'Need a new token?',
-      needTokenHighlight: 'Generate another one from the forgot password page.',
-      requestAnother: 'Request Another Token',
-      sideTitle: 'Old tokens are invalidated',
-      sideDescription:
-        'Every new forgot-password request invalidates previous active reset tokens, so only the latest valid token can be used.',
     },
     account: {
-      eyebrow: 'Account',
-      title: 'Manage your GameReason profile',
-      description: 'Update your account email, sign out, or delete your profile from the platform.',
-      emailPlaceholder: 'Update your email',
-      sideTitle: 'Your identity hub',
-      sideDescription:
-        'This cabinet is the first player profile area for GameReason. From here we can later grow into wishlist, order history, and game library sections.',
       deleteModalTitle: 'Delete account?',
       deleteModalDescription:
         'This will permanently remove your GameReason profile and sign you out of the platform.',
-      deleteConfirm: 'Yes, delete account',
-      deleteCancel: 'Keep my account',
+      deleteModalCancel: 'Keep my account',
+      deleteModalConfirm: 'Yes, delete account',
+    },
+    validation: {
+      fullNameRequired: 'Full Name is required',
+      emailRequired: 'Email is required',
+      emailMustContainAt: 'Email must contain @',
+      invalidEmailFormat: 'Invalid email format',
+      forbiddenDomain: 'Registration with this domain is not allowed',
+      passwordRequired: 'Password is required',
+      passwordMinLength: 'Password must be at least 8 characters long',
+      passwordUppercase: 'Password must contain at least one uppercase English letter',
+      passwordDigit: 'Password must contain at least one digit',
+      passwordSpecial: 'Password must contain at least one special character',
+      passwordAllowedChars:
+        'Password can contain only English letters, digits, and special characters',
+      confirmPasswordRequired: 'Confirm password is required',
+      passwordsDoNotMatch: 'Passwords do not match',
+      resetTokenRequired: 'Reset token is required',
+      termsRequired: 'You must agree to the Terms of Service and Privacy Policy',
+      phoneRequired: 'Phone Number is required',
+      phoneUkraineFormat: 'Phone Number must use +380XXXXXXXXX format',
+    },
+    messages: {
+      requestFailed: 'Request failed',
+      authRequired: 'Authentication required',
+      invalidOrExpiredAccessToken: 'Invalid or expired access token',
+      userNotFoundForToken: 'User not found for this token',
+      forgotPasswordFailed: 'Forgot password failed',
+      forgotPasswordSuccess:
+        'If an account with this email exists, a reset token has been generated',
+      tooManyResetRequests:
+        'Too many reset requests. Please wait 30 seconds before trying again.',
+      profileUpdateFailed: 'Profile update failed',
+      profileUpdatedSuccessfully: 'Profile updated successfully',
+      registrationFailed: 'Registration failed',
+      userCreatedSuccessfully: 'User created successfully',
+      loginFailed: 'Login failed',
+      invalidEmailOrPassword: 'Invalid email or password',
+      loginSuccessful: 'Login successful',
+      resetPasswordFailed: 'Reset password failed',
+      resetTokenInvalidOrExpired: 'Reset token is invalid or expired',
+      passwordResetSuccessful: 'Password reset successful',
+      userIdRequired: 'User id is required',
+      deleteOwnAccountOnly: 'You can delete only your own account',
+      userDeletedSuccessfully: 'User deleted successfully',
+      userNotFound: 'User not found',
+      invalidJsonBody: 'Invalid JSON body',
+      internalServerError: 'Internal server error',
     },
   },
   uk: {
-    app: {
-      name: 'GameReason',
-      mainNavigation: 'Основна навігація',
-    },
     nav: {
       home: 'Головна',
       account: 'Акаунт',
       login: 'Увійти',
       register: 'Реєстрація',
+      mainNavigation: 'Головна навігація',
     },
-    locale: {
-      english: 'ENG',
-      ukrainian: 'УКР',
+    language: {
+      switcher: 'Перемикач мови',
+      uk: 'УКР',
+      en: 'ENG',
     },
     common: {
-      email: 'Email',
-      password: 'Пароль',
-      confirmPassword: 'Підтвердження пароля',
+      brand: 'GameReason',
       signIn: 'Увійти',
       createAccount: 'Створити акаунт',
-      forgotPassword: 'Забули пароль',
       backToHome: 'Назад на головну',
       backToSignIn: 'Назад до входу',
-      saveProfile: 'Зберегти профіль',
-      savingProfile: 'Збереження профілю...',
       signOut: 'Вийти',
       deleteAccount: 'Видалити акаунт',
-      deletingAccount: 'Видалення акаунта...',
-      cancel: 'Скасувати',
-      confirm: 'Підтвердити',
-    },
-    home: {
-      previewEnvironment: 'Тестове staging-середовище',
-      storefront: 'Магазин PC-ігор',
-      title: 'Купуйте улюблені ігри, deluxe-видання та саундтреки в одному місці.',
-      description:
-        'GameReason — це цифровий маркетплейс ігор у стилі launcher-магазинів, який росте від авторизації до каталогу, кошика, checkout та персональної бібліотеки.',
-      stagingNote:
-        'Ця staging-збірка використовується для перевірки деплою, smoke та regression сценаріїв перед продакшеном.',
-      signedInAs: 'Ви увійшли в GameReason як {email}',
-      openAccount: 'Відкрити акаунт',
-    },
-    login: {
-      eyebrow: 'Вхід',
-      title: 'Увійдіть у свій акаунт GameReason',
-      description:
-        'Використайте email і пароль, щоб відкрити бібліотеку ігор та доступ до storefront.',
-      emailPlaceholder: 'Введіть ваш email',
-      passwordPlaceholder: 'Введіть ваш пароль',
-      submitting: 'Вхід...',
-      noAccount: 'Ще не маєте акаунта?',
-      noAccountHighlight: 'Створіть його й почніть збирати свою бібліотеку.',
-      forgotCopy: 'Забули пароль?',
-      forgotHighlight: 'Скористайтеся відновленням і поверніться до бібліотеки.',
-      sideTitle: 'З поверненням',
-      sideDescription:
-        'Увійдіть зараз, щоб зберігати профіль, покупки та майбутній wishlist в одному акаунті GameReason.',
-    },
-    register: {
-      eyebrow: 'Реєстрація',
-      title: 'Створіть свій акаунт GameReason',
-      description:
-        'Створіть профіль, щоб купувати ігри, збирати видання й тримати всю бібліотеку GameReason в одному місці.',
-      emailPlaceholder: 'Введіть ваш email',
-      passwordPlaceholder: 'Створіть пароль',
-      confirmPasswordPlaceholder: 'Повторіть пароль',
-      submitting: 'Створення акаунта...',
-      existingAccount: 'Вже маєте акаунт?',
-      existingAccountHighlight: 'Увійдіть і поверніться до магазину.',
-      sideTitle: 'Почніть збирати бібліотеку',
-      sideDescription:
-        'Реєстрація підтримує frontend і backend валідацію, заблоковані домени та перевірку дубліката email перед створенням нового профілю.',
-      goToSignIn: 'Перейти до входу',
-      passwordRules: 'Правила пароля',
-      passwordRuleMinLength: 'Щонайменше 8 символів',
-      passwordRuleUppercase: 'Щонайменше 1 велика англійська літера',
-      passwordRuleDigit: 'Щонайменше 1 цифра',
-      passwordRuleSpecial: 'Щонайменше 1 спеціальний символ',
-      passwordRuleCharset: 'Лише англійські літери, цифри та спеціальні символи',
+      deletingAccount: 'Видаляємо акаунт...',
+      saveProfile: 'Зберегти профіль',
+      savingProfile: 'Зберігаємо профіль...',
     },
     forgotPassword: {
-      eyebrow: 'Забули пароль',
-      title: 'Запросіть токен скидання для акаунта GameReason',
-      description:
-        'Введіть email, і ми згенеруємо токен для скидання пароля для локального та API тестування.',
-      emailPlaceholder: 'Введіть ваш email',
-      resetTokenLabel: 'Токен скидання',
-      expiresAtLabel: 'Діє до',
-      submitting: 'Генеруємо токен...',
-      submit: 'Згенерувати токен скидання',
-      knowToken: 'Вже маєте токен?',
-      knowTokenHighlight: 'Одразу переходьте до скидання пароля.',
       openReset: 'Відкрити скидання пароля',
-      sideTitle: 'Є rate limit',
-      sideDescription:
-        'Ви можете створити до трьох запитів на скидання за тридцять секунд. Четвертий запит буде заблоковано.',
-    },
-    resetPassword: {
-      eyebrow: 'Скидання пароля',
-      title: 'Встановіть новий пароль і повертайтеся в GameReason',
-      description:
-        'Вставте токен скидання, задайте новий пароль, і платформа автоматично увійде вас після успішного reset.',
-      token: 'Токен скидання',
-      tokenPlaceholder: 'Вставте токен скидання',
-      newPassword: 'Новий пароль',
-      newPasswordPlaceholder: 'Створіть новий пароль',
-      confirmNewPassword: 'Підтвердження нового пароля',
-      confirmNewPasswordPlaceholder: 'Повторіть новий пароль',
-      submitting: 'Скидаємо пароль...',
-      submit: 'Скинути пароль',
-      needToken: 'Потрібен новий токен?',
-      needTokenHighlight: 'Згенеруйте його на сторінці забутого пароля.',
-      requestAnother: 'Запросити новий токен',
-      sideTitle: 'Старі токени анулюються',
-      sideDescription:
-        'Кожен новий запит на forgot-password анулює попередні активні токени, тому працює лише останній валідний токен.',
     },
     account: {
-      eyebrow: 'Акаунт',
-      title: 'Керуйте профілем GameReason',
-      description: 'Оновлюйте email, виходьте з акаунта або видаляйте профіль з платформи.',
-      emailPlaceholder: 'Оновіть ваш email',
-      sideTitle: 'Ваш центр ідентичності',
-      sideDescription:
-        'Це перша версія кабінету користувача в GameReason. Пізніше звідси можна буде вирости у wishlist, історію замовлень та бібліотеку ігор.',
       deleteModalTitle: 'Видалити акаунт?',
       deleteModalDescription:
         'Це назавжди видалить ваш профіль GameReason і виконає вихід із платформи.',
-      deleteConfirm: 'Так, видалити акаунт',
-      deleteCancel: 'Залишити акаунт',
+      deleteModalCancel: 'Залишити акаунт',
+      deleteModalConfirm: 'Так, видалити акаунт',
+    },
+    validation: {
+      fullNameRequired: "Повне ім'я є обов'язковим",
+      emailRequired: "Email є обов'язковим",
+      emailMustContainAt: 'Email повинен містити @',
+      invalidEmailFormat: 'Некоректний формат email',
+      forbiddenDomain: 'Реєстрація з цим доменом недоступна',
+      passwordRequired: "Пароль є обов'язковим",
+      passwordMinLength: 'Пароль має містити щонайменше 8 символів',
+      passwordUppercase:
+        'Пароль має містити щонайменше одну велику англійську літеру',
+      passwordDigit: 'Пароль має містити щонайменше одну цифру',
+      passwordSpecial: 'Пароль має містити щонайменше один спеціальний символ',
+      passwordAllowedChars:
+        'Пароль може містити лише англійські літери, цифри та спеціальні символи',
+      confirmPasswordRequired: "Підтвердження пароля є обов'язковим",
+      passwordsDoNotMatch: 'Паролі не збігаються',
+      resetTokenRequired: "Токен скидання є обов'язковим",
+      termsRequired: 'Потрібно погодитися з Terms of Service і Privacy Policy',
+      phoneRequired: "Номер телефону є обов'язковим",
+      phoneUkraineFormat: 'Номер телефону має бути у форматі +380XXXXXXXXX',
+    },
+    messages: {
+      requestFailed: 'Запит не виконано',
+      authRequired: 'Потрібна автентифікація',
+      invalidOrExpiredAccessToken: 'Недійсний або прострочений access token',
+      userNotFoundForToken: 'Користувача для цього токена не знайдено',
+      forgotPasswordFailed: 'Не вдалося виконати запит на скидання пароля',
+      forgotPasswordSuccess:
+        'Якщо акаунт із цим email існує, токен для скидання вже згенеровано',
+      tooManyResetRequests:
+        'Забагато запитів на скидання. Зачекайте 30 секунд перед новою спробою.',
+      profileUpdateFailed: 'Не вдалося оновити профіль',
+      profileUpdatedSuccessfully: 'Профіль успішно оновлено',
+      registrationFailed: 'Не вдалося завершити реєстрацію',
+      userCreatedSuccessfully: 'Користувача успішно створено',
+      loginFailed: 'Не вдалося виконати вхід',
+      invalidEmailOrPassword: 'Невірний email або пароль',
+      loginSuccessful: 'Вхід успішний',
+      resetPasswordFailed: 'Не вдалося скинути пароль',
+      resetTokenInvalidOrExpired: 'Токен скидання недійсний або прострочений',
+      passwordResetSuccessful: 'Пароль успішно скинуто',
+      userIdRequired: 'Потрібен ідентифікатор користувача',
+      deleteOwnAccountOnly: 'Можна видалити лише власний акаунт',
+      userDeletedSuccessfully: 'Користувача успішно видалено',
+      userNotFound: 'Користувача не знайдено',
+      invalidJsonBody: 'Некоректне JSON тіло запиту',
+      internalServerError: 'Внутрішня помилка сервера',
     },
   },
 };
 
 const rawTextTranslations = {
   uk: {
-    'Request failed': 'Запит завершився помилкою',
+    'Request failed': 'Запит не виконано',
     'Authentication required': 'Потрібна автентифікація',
-    'Invalid or expired access token': 'Недійсний або прострочений токен доступу',
+    'Invalid or expired access token': 'Недійсний або прострочений access token',
     'User not found for this token': 'Користувача для цього токена не знайдено',
     'Forgot password failed': 'Не вдалося виконати запит на скидання пароля',
     'If an account with this email exists, a reset token has been generated':
-      'Якщо акаунт з таким email існує, токен для скидання вже згенеровано',
+      'Якщо акаунт із цим email існує, токен для скидання вже згенеровано',
     'Too many reset requests. Please wait 30 seconds before trying again.':
-      'Занадто багато запитів на скидання. Зачекайте 30 секунд перед новою спробою.',
+      'Забагато запитів на скидання. Зачекайте 30 секунд перед новою спробою.',
     'Profile update failed': 'Не вдалося оновити профіль',
-    'This email is already registered': 'Цей email вже зареєстрований',
     'Profile updated successfully': 'Профіль успішно оновлено',
     'Registration failed': 'Не вдалося завершити реєстрацію',
     'User created successfully': 'Користувача успішно створено',
@@ -301,11 +202,12 @@ const rawTextTranslations = {
     'User not found': 'Користувача не знайдено',
     'Invalid JSON body': 'Некоректне JSON тіло запиту',
     'Internal server error': 'Внутрішня помилка сервера',
-    'Email is required': 'Email є обовʼязковим',
+    'Full Name is required': "Повне ім'я є обов'язковим",
+    'Email is required': "Email є обов'язковим",
     'Email must contain @': 'Email повинен містити @',
     'Invalid email format': 'Некоректний формат email',
-    'Registration with this domain is not allowed': 'Реєстрація з цим доменом не дозволена',
-    'Password is required': 'Пароль є обовʼязковим',
+    'Registration with this domain is not allowed': 'Реєстрація з цим доменом недоступна',
+    'Password is required': "Пароль є обов'язковим",
     'Password must be at least 8 characters long': 'Пароль має містити щонайменше 8 символів',
     'Password must contain at least one uppercase English letter':
       'Пароль має містити щонайменше одну велику англійську літеру',
@@ -314,14 +216,71 @@ const rawTextTranslations = {
       'Пароль має містити щонайменше один спеціальний символ',
     'Password can contain only English letters, digits, and special characters':
       'Пароль може містити лише англійські літери, цифри та спеціальні символи',
-    'Confirm password is required': 'Підтвердження пароля є обовʼязковим',
+    'Confirm password is required': "Підтвердження пароля є обов'язковим",
     'Passwords do not match': 'Паролі не збігаються',
-    'Reset token is required': 'Токен скидання є обовʼязковим',
-    'Email must be a string': 'Email має бути рядком',
-    'Password must be a string': 'Пароль має бути рядком',
-    'Confirm password must be a string': 'Підтвердження пароля має бути рядком',
+    'Reset token is required': "Токен скидання є обов'язковим",
+    'You must agree to the Terms of Service and Privacy Policy':
+      'Потрібно погодитися з Terms of Service і Privacy Policy',
+    'Phone Number is required': "Номер телефону є обов'язковим",
+    'Phone Number must use +380XXXXXXXXX format':
+      'Номер телефону має бути у форматі +380XXXXXXXXX',
   },
 };
+
+const messageKeyByText = new Map([
+  ['Request failed', 'messages.requestFailed'],
+  ['Authentication required', 'messages.authRequired'],
+  ['Invalid or expired access token', 'messages.invalidOrExpiredAccessToken'],
+  ['User not found for this token', 'messages.userNotFoundForToken'],
+  ['Forgot password failed', 'messages.forgotPasswordFailed'],
+  [
+    'If an account with this email exists, a reset token has been generated',
+    'messages.forgotPasswordSuccess',
+  ],
+  [
+    'Too many reset requests. Please wait 30 seconds before trying again.',
+    'messages.tooManyResetRequests',
+  ],
+  ['Profile update failed', 'messages.profileUpdateFailed'],
+  ['Profile updated successfully', 'messages.profileUpdatedSuccessfully'],
+  ['Registration failed', 'messages.registrationFailed'],
+  ['User created successfully', 'messages.userCreatedSuccessfully'],
+  ['Login failed', 'messages.loginFailed'],
+  ['Invalid email or password', 'messages.invalidEmailOrPassword'],
+  ['Login successful', 'messages.loginSuccessful'],
+  ['Reset password failed', 'messages.resetPasswordFailed'],
+  ['Reset token is invalid or expired', 'messages.resetTokenInvalidOrExpired'],
+  ['Password reset successful', 'messages.passwordResetSuccessful'],
+  ['User id is required', 'messages.userIdRequired'],
+  ['You can delete only your own account', 'messages.deleteOwnAccountOnly'],
+  ['User deleted successfully', 'messages.userDeletedSuccessfully'],
+  ['User not found', 'messages.userNotFound'],
+  ['Invalid JSON body', 'messages.invalidJsonBody'],
+  ['Internal server error', 'messages.internalServerError'],
+  ['Full Name is required', 'validation.fullNameRequired'],
+  ['Email is required', 'validation.emailRequired'],
+  ['Email must contain @', 'validation.emailMustContainAt'],
+  ['Invalid email format', 'validation.invalidEmailFormat'],
+  ['Registration with this domain is not allowed', 'validation.forbiddenDomain'],
+  ['Password is required', 'validation.passwordRequired'],
+  ['Password must be at least 8 characters long', 'validation.passwordMinLength'],
+  [
+    'Password must contain at least one uppercase English letter',
+    'validation.passwordUppercase',
+  ],
+  ['Password must contain at least one digit', 'validation.passwordDigit'],
+  ['Password must contain at least one special character', 'validation.passwordSpecial'],
+  [
+    'Password can contain only English letters, digits, and special characters',
+    'validation.passwordAllowedChars',
+  ],
+  ['Confirm password is required', 'validation.confirmPasswordRequired'],
+  ['Passwords do not match', 'validation.passwordsDoNotMatch'],
+  ['Reset token is required', 'validation.resetTokenRequired'],
+  ['You must agree to the Terms of Service and Privacy Policy', 'validation.termsRequired'],
+  ['Phone Number is required', 'validation.phoneRequired'],
+  ['Phone Number must use +380XXXXXXXXX format', 'validation.phoneUkraineFormat'],
+]);
 
 const LocaleContext = createContext({
   locale: DEFAULT_LOCALE,
@@ -344,12 +303,16 @@ function interpolate(template, variables) {
   }
 
   return template.replace(/\{(\w+)\}/g, (_match, token) => {
-    if (variables[token] === undefined || variables[token] === null) {
-      return '';
-    }
-
-    return String(variables[token]);
+    const value = variables[token];
+    return value == null ? '' : String(value);
   });
+}
+
+function getTranslation(key, locale = DEFAULT_LOCALE, variables) {
+  const dictionary = translations[locale] ?? translations[DEFAULT_LOCALE];
+  const fallbackDictionary = translations[DEFAULT_LOCALE];
+  const template = getNestedValue(dictionary, key) ?? getNestedValue(fallbackDictionary, key) ?? key;
+  return interpolate(template, variables);
 }
 
 export function getCurrentLocale() {
@@ -361,13 +324,6 @@ export function getCurrentLocale() {
   return isSupportedLocale(storedLocale) ? storedLocale : DEFAULT_LOCALE;
 }
 
-export function translateText(key, locale = DEFAULT_LOCALE, variables) {
-  const dictionary = translations[locale] ?? translations[DEFAULT_LOCALE];
-  const fallbackDictionary = translations[DEFAULT_LOCALE];
-  const template = getNestedValue(dictionary, key) ?? getNestedValue(fallbackDictionary, key) ?? key;
-  return interpolate(template, variables);
-}
-
 export function translateRawText(text, locale = DEFAULT_LOCALE) {
   if (!text) {
     return text;
@@ -375,6 +331,29 @@ export function translateRawText(text, locale = DEFAULT_LOCALE) {
 
   const localeMap = rawTextTranslations[locale] ?? {};
   return localeMap[text] ?? text;
+}
+
+export function translateKnownMessage(message, t) {
+  if (!message) {
+    return '';
+  }
+
+  const key = messageKeyByText.get(message);
+  return key ? t(key) : message;
+}
+
+export function localizeApiError(error, t) {
+  const localizedFieldErrors = Object.fromEntries(
+    Object.entries(error?.fieldErrors || {}).map(([field, message]) => [
+      field,
+      translateKnownMessage(message, t),
+    ]),
+  );
+
+  return {
+    message: translateKnownMessage(error?.message || '', t),
+    fieldErrors: localizedFieldErrors,
+  };
 }
 
 export function I18nProvider({ children }) {
@@ -393,8 +372,12 @@ export function I18nProvider({ children }) {
   const value = useMemo(
     () => ({
       locale,
-      setLocale,
-      t: (key, variables) => translateText(key, locale, variables),
+      setLocale: (nextLocale) => {
+        if (isSupportedLocale(nextLocale)) {
+          setLocale(nextLocale);
+        }
+      },
+      t: (key, variables) => getTranslation(key, locale, variables),
       translateText: (text) => translateRawText(text, locale),
     }),
     [locale],

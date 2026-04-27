@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
 import { deleteCurrentUser, getCurrentUser } from '../lib/api';
 import { clearSession, getSession, saveSession } from '../lib/auth';
-<<<<<<< Updated upstream
 import { localizeApiError, useI18n } from '../lib/i18n';
 import { validateAccountProfileForm } from '../lib/validation';
 
@@ -175,14 +174,6 @@ function AccountHeader({ profile }) {
 export function AccountPage() {
   const navigate = useNavigate();
   const { t } = useI18n();
-=======
-import { useI18n } from '../lib/i18n';
-import { validateProfileForm } from '../lib/validation';
-
-export function AccountPage() {
-  const navigate = useNavigate();
-  const { t, translateText } = useI18n();
->>>>>>> Stashed changes
   const session = getSession();
   const accessToken = session?.accessToken ?? '';
   const currentUserId = session?.user?.id ?? '';
@@ -253,16 +244,9 @@ export function AccountPage() {
   function handleProfileSubmit(event) {
     event.preventDefault();
 
-<<<<<<< Updated upstream
     if (!isEditing) {
       setIsEditing(true);
       setSuccessMessage('');
-=======
-    const nextErrors = validateProfileForm(values, translateText);
-
-    if (Object.keys(nextErrors).length > 0) {
-      setErrors(nextErrors);
->>>>>>> Stashed changes
       return;
     }
 
@@ -303,7 +287,6 @@ export function AccountPage() {
     }
   }
 
-<<<<<<< Updated upstream
   function openDeleteModal() {
     setFormError('');
     setSuccessMessage('');
@@ -319,20 +302,10 @@ export function AccountPage() {
   }
 
   async function handleDeleteAccount() {
-=======
-  function handleDeleteAccount() {
->>>>>>> Stashed changes
     if (!currentUserId) {
       return;
     }
 
-<<<<<<< Updated upstream
-=======
-    setIsDeleteModalOpen(true);
-  }
-
-  async function confirmDeleteAccount() {
->>>>>>> Stashed changes
     setIsDeleting(true);
     setFormError('');
     setSuccessMessage('');
@@ -341,7 +314,6 @@ export function AccountPage() {
       await deleteCurrentUser(currentUserId);
       setIsDeleteModalOpen(false);
       clearSession();
-      setIsDeleteModalOpen(false);
       navigate('/register');
     } catch (error) {
       const localizedError = localizeApiError(error, t);
@@ -350,10 +322,6 @@ export function AccountPage() {
     } finally {
       setIsDeleting(false);
     }
-  }
-
-  function cancelDeleteAccount() {
-    setIsDeleteModalOpen(false);
   }
 
   function handleLogout() {
@@ -369,7 +337,6 @@ export function AccountPage() {
   };
 
   return (
-<<<<<<< Updated upstream
     <section className="account-page">
       <AccountHeader profile={profile} />
 
@@ -395,32 +362,6 @@ export function AccountPage() {
             </button>
           ))}
         </div>
-=======
-    <div className="auth-layout">
-      <section className="auth-card">
-        <div className="auth-copy">
-          <span className="eyebrow">{t('account.eyebrow')}</span>
-          <h1>{t('account.title')}</h1>
-          <p>{t('account.description')}</p>
-        </div>
-
-        <form className="auth-form" onSubmit={handleSubmit} noValidate>
-          <label className="field">
-            <span>{t('common.email')}</span>
-            <input
-              data-testid="account-email-input"
-              className={errors.email ? 'input-error' : ''}
-              type="email"
-              name="email"
-              placeholder={t('account.emailPlaceholder')}
-              autoComplete="email"
-              value={values.email}
-              onChange={handleChange}
-              aria-invalid={Boolean(errors.email)}
-            />
-            {errors.email ? <small className="error-text">{errors.email}</small> : null}
-          </label>
->>>>>>> Stashed changes
 
         {activeTab === 'summary' ? (
           <div className="account-summary-grid" data-testid="account-summary-tab">
@@ -434,7 +375,6 @@ export function AccountPage() {
               <DetailItem label="Phone Number" value={profile.phoneNumber} testId="account-summary-phone" />
             </section>
 
-<<<<<<< Updated upstream
             <section className="account-panel" data-testid="default-address-block">
               <div className="account-panel-heading">
                 <h2>Default Address</h2>
@@ -680,75 +620,5 @@ export function AccountPage() {
         </div>
       ) : null}
     </section>
-=======
-          <button
-            className="primary-button auth-submit"
-            data-testid="account-save-button"
-            type="submit"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? t('common.savingProfile') : t('common.saveProfile')}
-          </button>
-        </form>
-
-        <div className="stacked-actions">
-          <button
-            className="secondary-button"
-            data-testid="account-sign-out-button"
-            type="button"
-            onClick={handleLogout}
-          >
-            {t('common.signOut')}
-          </button>
-          <button
-            className="danger-button"
-            data-testid="account-delete-button"
-            type="button"
-            onClick={handleDeleteAccount}
-            disabled={isDeleting}
-          >
-            {isDeleting ? t('common.deletingAccount') : t('common.deleteAccount')}
-          </button>
-        </div>
-      </section>
-
-      <aside className="auth-side-note">
-        <h2>{t('account.sideTitle')}</h2>
-        <p>{t('account.sideDescription')}</p>
-        <Link className="secondary-button" to="/">
-          {t('common.backToHome')}
-        </Link>
-      </aside>
-
-      {isDeleteModalOpen ? (
-        <div className="modal-overlay" data-testid="account-delete-modal" role="dialog" aria-modal="true">
-          <div className="modal-card">
-            <h2>{t('account.deleteModalTitle')}</h2>
-            <p>{t('account.deleteModalDescription')}</p>
-            <div className="modal-actions">
-              <button
-                className="secondary-button"
-                data-testid="account-delete-cancel-button"
-                type="button"
-                onClick={cancelDeleteAccount}
-                disabled={isDeleting}
-              >
-                {t('account.deleteCancel')}
-              </button>
-              <button
-                className="danger-button"
-                data-testid="account-delete-confirm-button"
-                type="button"
-                onClick={confirmDeleteAccount}
-                disabled={isDeleting}
-              >
-                {isDeleting ? t('common.deletingAccount') : t('account.deleteConfirm')}
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
-    </div>
->>>>>>> Stashed changes
   );
 }

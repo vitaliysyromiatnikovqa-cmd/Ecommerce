@@ -3,11 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AuthField, AuthShell } from '../components/AuthShell';
 import { registerUser } from '../lib/api';
 import { saveSession } from '../lib/auth';
-<<<<<<< Updated upstream
 import { localizeApiError, useI18n } from '../lib/i18n';
-=======
-import { useI18n } from '../lib/i18n';
->>>>>>> Stashed changes
 import { validateRegisterForm } from '../lib/validation';
 
 function PasswordRulesTooltip() {
@@ -39,11 +35,7 @@ function PasswordRulesTooltip() {
 
 export function RegisterPage() {
   const navigate = useNavigate();
-<<<<<<< Updated upstream
   const { t } = useI18n();
-=======
-  const { t, translateText } = useI18n();
->>>>>>> Stashed changes
   const [values, setValues] = useState({
     fullName: '',
     email: '',
@@ -54,7 +46,6 @@ export function RegisterPage() {
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
 
   function handleChange(event) {
     const { checked, name, type, value } = event.target;
@@ -72,12 +63,8 @@ export function RegisterPage() {
   async function handleSubmit(event) {
     event.preventDefault();
 
-<<<<<<< Updated upstream
     const nextErrors = validateRegisterForm(values, t);
     const fullName = values.fullName.trim();
-=======
-    const nextErrors = validateRegisterForm(values, translateText);
->>>>>>> Stashed changes
 
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
@@ -116,7 +103,6 @@ export function RegisterPage() {
   }
 
   return (
-<<<<<<< Updated upstream
     <AuthShell
       shellBackTo="/"
       shellBackLabel="Back to Home"
@@ -190,7 +176,11 @@ export function RegisterPage() {
           toggleTestId="register-confirm-password-toggle"
         />
 
-        <label className={errors.termsAccepted ? 'auth-check auth-terms auth-terms-error' : 'auth-check auth-terms'}>
+        <label
+          className={
+            errors.termsAccepted ? 'auth-check auth-terms auth-terms-error' : 'auth-check auth-terms'
+          }
+        >
           <input
             type="checkbox"
             name="termsAccepted"
@@ -228,128 +218,5 @@ export function RegisterPage() {
         </button>
       </form>
     </AuthShell>
-=======
-    <div className="auth-layout">
-      <section className="auth-card">
-        <div className="auth-copy">
-          <span className="eyebrow">{t('register.eyebrow')}</span>
-          <h1>{t('register.title')}</h1>
-          <p>{t('register.description')}</p>
-        </div>
-
-        <form className="auth-form" onSubmit={handleSubmit}>
-          <label className="field">
-            <span>{t('common.email')}</span>
-            <input
-              data-testid="register-email-input"
-              className={errors.email ? 'input-error' : ''}
-              type="email"
-              name="email"
-              placeholder={t('register.emailPlaceholder')}
-              autoComplete="email"
-              value={values.email}
-              onChange={handleChange}
-              aria-invalid={Boolean(errors.email)}
-            />
-            {errors.email ? <small className="error-text">{errors.email}</small> : null}
-          </label>
-
-          <label className="field">
-            <div className="field-header">
-              <span>{t('common.password')}</span>
-              <div
-                className="tooltip-anchor"
-                onMouseEnter={() => setIsTooltipVisible(true)}
-                onMouseLeave={() => setIsTooltipVisible(false)}
-                onFocus={() => setIsTooltipVisible(true)}
-                onBlur={() => setIsTooltipVisible(false)}
-              >
-                <button
-                  className="tooltip-trigger"
-                  data-testid="register-password-rules-trigger"
-                  type="button"
-                  aria-label={t('register.passwordRules')}
-                >
-                  ?
-                </button>
-                <div
-                  className={isTooltipVisible ? 'tooltip-bubble tooltip-bubble-visible' : 'tooltip-bubble'}
-                  data-testid="register-password-rules-tooltip"
-                  role="tooltip"
-                >
-                  <strong>{t('register.passwordRules')}</strong>
-                  <ul>
-                    <li>{t('register.passwordRuleMinLength')}</li>
-                    <li>{t('register.passwordRuleUppercase')}</li>
-                    <li>{t('register.passwordRuleDigit')}</li>
-                    <li>{t('register.passwordRuleSpecial')}</li>
-                    <li>{t('register.passwordRuleCharset')}</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <input
-              data-testid="register-password-input"
-              className={errors.password ? 'input-error' : ''}
-              type="password"
-              name="password"
-              placeholder={t('register.passwordPlaceholder')}
-              autoComplete="new-password"
-              value={values.password}
-              onChange={handleChange}
-              aria-invalid={Boolean(errors.password)}
-            />
-            {errors.password ? (
-              <small className="error-text">{errors.password}</small>
-            ) : null}
-          </label>
-
-          <label className="field">
-            <span>{t('common.confirmPassword')}</span>
-            <input
-              data-testid="register-confirm-password-input"
-              className={errors.confirmPassword ? 'input-error' : ''}
-              type="password"
-              name="confirmPassword"
-              placeholder={t('register.confirmPasswordPlaceholder')}
-              autoComplete="new-password"
-              value={values.confirmPassword}
-              onChange={handleChange}
-              aria-invalid={Boolean(errors.confirmPassword)}
-            />
-            {errors.confirmPassword ? (
-              <small className="error-text">{errors.confirmPassword}</small>
-            ) : null}
-          </label>
-
-          {formError ? <div className="form-error-banner">{formError}</div> : null}
-
-          <button
-            className="primary-button auth-submit"
-            data-testid="register-submit-button"
-            type="submit"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? t('register.submitting') : t('common.createAccount')}
-          </button>
-        </form>
-
-        <p className="auth-footer">
-          {t('register.existingAccount')} <span>{t('register.existingAccountHighlight')}</span>
-        </p>
-        <Link className="secondary-button" data-testid="register-sign-in-link" to="/login">
-          {t('common.signIn')}
-        </Link>
-      </section>
-
-      <aside className="auth-side-note">
-        <h2>{t('register.sideTitle')}</h2>
-        <p>{t('register.sideDescription')}</p>
-        <Link className="secondary-button" to="/login">
-          {t('register.goToSignIn')}
-        </Link>
-      </aside>
-    </div>
->>>>>>> Stashed changes
   );
 }
