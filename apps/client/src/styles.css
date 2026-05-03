@@ -351,7 +351,6 @@ h2 {
   gap: 14px;
 }
 
-<<<<<<< Updated upstream
 .auth-screen {
   min-height: 100vh;
   display: flex;
@@ -1495,7 +1494,8 @@ h2 {
 
 .account-security-actions {
   max-width: 340px;
-=======
+}
+
 .auth-actions-stack {
   margin-top: 4px;
 }
@@ -1552,7 +1552,6 @@ h2 {
   color: #f5efe4;
   font-weight: 600;
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
->>>>>>> Stashed changes
 }
 
 @media (max-width: 860px) {
