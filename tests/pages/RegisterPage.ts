@@ -61,8 +61,14 @@ get confirmPasswordError(): Locator {
   return this.page.getByText('Confirm password is required');
 }
   // --- Дії ---
-  async login(email: string, password: string) {
-    // дописуєш сам
+  async register(email: string, password: string) {
+    // дописуєш сам   
+  await this.fullNameInput.fill('Test User');
+  await this.emailInput.fill(email);
+  await this.passwordInput.fill(password);
+  await this.confirmPasswordInput.fill(password);
+  await this.agreeCheckbox.check();
+  await this.submitButton.click();
   }
 
   async openPageRegister() {

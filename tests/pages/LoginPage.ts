@@ -13,15 +13,15 @@ export class LoginPage extends BasePage {
   }
 
   get emailInput(): Locator {
-    return this.page.getByLabel('Email');
+    return this.page.getByTestId('login-email-input');
   }
 
   get passwordInput(): Locator {
-    return this.page.getByLabel('Password');
+    return this.page.getByTestId('login-password-input')
   }
 
   get submitButton(): Locator {
-    return this.page.getByRole('button', { name: 'Sign In' });
+    return this.page.getByTestId('login-submit-button');
   }
 
   get forgotPasswordLink(): Locator {
@@ -35,31 +35,41 @@ export class LoginPage extends BasePage {
   get errorMessages(): Locator {
     return this.page.locator('.error-text');
   }
+get emailError(): Locator {
+  return this.page.getByText('Email is required');
+}
+get emailErrorDomain(): Locator {
+  return this.page.getByText('Invalid email format');
+}
+get emailSymbolError(): Locator {
+  return this.page.getByText('Email must contain @');
+}
 
+get passwordError(): Locator {
+  return this.page.getByText('Password is required');
+}
   get formErrorBanner(): Locator {
     return this.page.locator('.form-error-banner');
+  }
+
+  get seePasswordButton(): Locator {
+    return this.page.getByTestId('login-password-toggle');
   }
 
   async openLoginPage() {
     await this.goto(this.url);
   }
 
-  async fillLoginForm(email: string, password: string) {
-    await this.emailInput.fill(email);
-    await this.passwordInput.fill(password);
-  }
 
   async submit() {
     await this.submitButton.click();
   }
 
-  async login(email: string, password: string) {
-    await this.fillLoginForm(email, password);
-    await this.submit();
-  }
-
-  async expectPageVisible() {
-    await expect(this.heading).toBeVisible();
-    await expect(this.submitButton).toBeVisible();
-  }
+ 
+async expectRequiredErrors() {
+  await expect(this.errorMessages).toHaveText([
+    'Email is required',
+    'Password is required',
+  ]);
+}
 }

@@ -15,6 +15,9 @@ export class ProfilePage extends BasePage {
 
   // --- Локатори ---
 
+    get myAccountText(): Locator {
+    return this.page.getByText('My Account');
+  }
   get summaryTab(): Locator {
     return this.page.getByTestId('account-tab-summary')
   }
