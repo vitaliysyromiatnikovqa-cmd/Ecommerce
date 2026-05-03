@@ -94,3 +94,31 @@ export function validateConfirmPassword(password, confirmPassword) {
 
   return '';
 }
+
+export function validateOptionalFullName(fullName) {
+  if (fullName === undefined || fullName === null) {
+    return '';
+  }
+
+  if (typeof fullName !== 'string') {
+    return 'Full Name must be a string';
+  }
+
+  if (!fullName.trim()) {
+    return 'Full Name is required';
+  }
+
+  return '';
+}
+
+export function validateOptionalTermsAccepted(termsAccepted) {
+  if (termsAccepted === undefined || termsAccepted === null) {
+    return '';
+  }
+
+  if (termsAccepted !== true) {
+    return 'You must agree to the Terms of Service and Privacy Policy';
+  }
+
+  return '';
+}

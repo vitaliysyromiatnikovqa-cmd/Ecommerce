@@ -13,6 +13,8 @@ import { prisma } from './db.js';
 import {
   validateConfirmPassword,
   validateEmail,
+  validateOptionalFullName,
+  validateOptionalTermsAccepted,
   validatePassword,
 } from './validation.js';
 
@@ -296,11 +298,19 @@ app.patch('/api/users/me', requireAuth, async (request, response) => {
 });
 
 app.post('/api/auth/register', async (request, response) => {
-  const { email = '', password = '', confirmPassword = '' } = request.body ?? {};
+  const {
+    email = '',
+    password = '',
+    confirmPassword = '',
+    fullName,
+    termsAccepted,
+  } = request.body ?? {};
   const errors = {
+    fullName: validateOptionalFullName(fullName),
     email: validateEmail(email),
     password: validatePassword(password),
     confirmPassword: validateConfirmPassword(password, confirmPassword),
+    termsAccepted: validateOptionalTermsAccepted(termsAccepted),
   };
 
   const fieldErrors = Object.fromEntries(

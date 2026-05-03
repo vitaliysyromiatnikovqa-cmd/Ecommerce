@@ -1,16 +1,34 @@
 import { getAccessToken } from './auth';
+import { getCurrentLocale, translateRawText } from './i18n';
 
 async function readJson(response) {
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    const error = new Error(data.message || 'Request failed');
+    const locale = getCurrentLocale();
+    const translatedFieldErrors = Object.fromEntries(
+      Object.entries(data.errors || {}).map(([field, message]) => [
+        field,
+        translateRawText(message, locale),
+      ]),
+    );
+    const error = new Error(translateRawText(data.message || 'Request failed', locale));
     error.status = response.status;
-    error.fieldErrors = data.errors || {};
+    error.fieldErrors = translatedFieldErrors;
     throw error;
   }
 
-  return data;
+  const locale = getCurrentLocale();
+  return {
+    ...data,
+    message: translateRawText(data.message, locale),
+    errors: Object.fromEntries(
+      Object.entries(data.errors || {}).map(([field, message]) => [
+        field,
+        translateRawText(message, locale),
+      ]),
+    ),
+  };
 }
 
 function createJsonRequestOptions(method, payload, authRequired = false) {

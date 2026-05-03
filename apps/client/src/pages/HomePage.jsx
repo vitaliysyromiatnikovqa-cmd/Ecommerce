@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { LanguageSwitcher } from '../components/LanguageSwitcher';
 import { getSession } from '../lib/auth';
 
 const categories = ['All Games', 'PlayStation', 'Xbox', 'Nintendo', 'PC Gaming', 'Accessories', 'Deals'];
@@ -29,6 +30,10 @@ const featuredProducts = [
     accent: 'product-card-shadow',
   },
 ];
+
+function toTestIdPart(value) {
+  return value.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '').toLowerCase();
+}
 
 function BrandIcon() {
   return (
@@ -107,7 +112,7 @@ export function HomePage() {
     <section className="storefront">
       <header className="storefront-header">
         <div className="storefront-header-main">
-          <Link className="storefront-brand" to="/">
+          <Link className="storefront-brand" to="/" data-testid="home-brand-link">
             <span className="storefront-brand-mark">
               <BrandIcon />
             </span>
@@ -120,28 +125,34 @@ export function HomePage() {
             <span className="storefront-search-icon">
               <SearchIcon />
             </span>
-            <input placeholder="Search games, consoles, accessories..." type="search" />
+            <input
+              placeholder="Search games, consoles, accessories..."
+              type="search"
+              data-testid="home-search-input"
+            />
           </label>
 
           <nav className="storefront-actions" aria-label="Store actions">
-            <Link className="storefront-action-link" to="/">
+            <LanguageSwitcher className="page-locale-switcher" />
+
+            <Link className="storefront-action-link" to="/" data-testid="home-cart-link">
               <CartIcon />
               <span>Cart</span>
               <span className="storefront-pill">3</span>
             </Link>
 
             {session ? (
-              <Link className="storefront-action-link" to="/account">
+              <Link className="storefront-action-link" to="/account" data-testid="home-account-link">
                 <UserIcon />
                 <span>{email.split('@')[0] || 'Account'}</span>
               </Link>
             ) : (
               <>
-                <Link className="storefront-action-link" to="/login">
+                <Link className="storefront-action-link" to="/login" data-testid="home-sign-in-link">
                   <UserIcon />
                   <span>Sign In</span>
                 </Link>
-                <Link className="primary-button storefront-signup" to="/register">
+                <Link className="primary-button storefront-signup" to="/register" data-testid="home-sign-up-link">
                   Sign Up
                 </Link>
               </>
@@ -151,7 +162,12 @@ export function HomePage() {
 
         <nav className="storefront-categories" aria-label="Store categories">
           {categories.map((category) => (
-            <Link key={category} className="storefront-category-link" to="/">
+            <Link
+              key={category}
+              className="storefront-category-link"
+              to="/"
+              data-testid={`home-category-${toTestIdPart(category)}-link`}
+            >
               {category}
             </Link>
           ))}
@@ -174,10 +190,14 @@ export function HomePage() {
           ) : null}
 
           <div className="storefront-hero-actions">
-            <Link className="primary-button" to={session ? '/account' : '/register'}>
+            <Link
+              className="primary-button"
+              to={session ? '/account' : '/register'}
+              data-testid={session ? 'home-open-account-link' : 'home-shop-now-link'}
+            >
               {session ? 'Open Account' : 'Shop Now'}
             </Link>
-            <Link className="storefront-ghost-button" to="/login">
+            <Link className="storefront-ghost-button" to="/login" data-testid="home-view-deals-link">
               View Deals
             </Link>
           </div>
@@ -192,7 +212,7 @@ export function HomePage() {
               <span>Gamers</span>
             </div>
             <div>
-              <strong>4.9★</strong>
+              <strong>4.9/5</strong>
               <span>Rating</span>
             </div>
           </div>
@@ -215,8 +235,8 @@ export function HomePage() {
             <h2>Featured Products</h2>
             <p>Handpicked items just for your setup.</p>
           </div>
-          <Link className="storefront-inline-cta" to="/">
-            View All →
+          <Link className="storefront-inline-cta" to="/" data-testid="home-view-all-link">
+            View All -&gt;
           </Link>
         </div>
 

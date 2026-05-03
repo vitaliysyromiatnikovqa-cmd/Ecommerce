@@ -3,10 +3,12 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { AuthField, AuthShell } from '../components/AuthShell';
 import { resetPassword } from '../lib/api';
 import { saveSession } from '../lib/auth';
+import { localizeApiError, useI18n } from '../lib/i18n';
 import { validateResetPasswordForm } from '../lib/validation';
 
 export function ResetPasswordPage() {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [searchParams] = useSearchParams();
   const [values, setValues] = useState({
     token: searchParams.get('token') ?? '',
@@ -33,7 +35,7 @@ export function ResetPasswordPage() {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    const nextErrors = validateResetPasswordForm(values);
+    const nextErrors = validateResetPasswordForm(values, t);
 
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
@@ -51,8 +53,9 @@ export function ResetPasswordPage() {
       });
       navigate('/account');
     } catch (error) {
-      setErrors(error.fieldErrors || {});
-      setFormError(error.message);
+      const localizedError = localizeApiError(error, t);
+      setErrors(localizedError.fieldErrors || {});
+      setFormError(localizedError.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -67,7 +70,11 @@ export function ResetPasswordPage() {
       footer={
         <p className="auth-helper-text auth-helper-text-centered">
           Need a new token?{' '}
-          <Link className="auth-inline-link" to="/forgot-password">
+          <Link
+            className="auth-inline-link"
+            to="/forgot-password"
+            data-testid="reset-password-request-token-link"
+          >
             Request Another Token
           </Link>
         </p>
@@ -84,6 +91,7 @@ export function ResetPasswordPage() {
           onChange={handleChange}
           error={errors.token}
           icon="token"
+          testId="reset-password-token-input"
         />
 
         <AuthField
@@ -97,6 +105,8 @@ export function ResetPasswordPage() {
           error={errors.password}
           icon="password"
           toggleVisibility
+          testId="reset-password-password-input"
+          toggleTestId="reset-password-password-toggle"
         />
 
         <AuthField
@@ -110,6 +120,8 @@ export function ResetPasswordPage() {
           error={errors.confirmPassword}
           icon="password"
           toggleVisibility
+          testId="reset-password-confirm-password-input"
+          toggleTestId="reset-password-confirm-password-toggle"
         />
 
         <p className="auth-helper-text">
@@ -118,7 +130,12 @@ export function ResetPasswordPage() {
 
         {formError ? <div className="form-error-banner">{formError}</div> : null}
 
-        <button className="primary-button auth-submit auth-submit-wide" type="submit" disabled={isSubmitting}>
+        <button
+          className="primary-button auth-submit auth-submit-wide"
+          type="submit"
+          disabled={isSubmitting}
+          data-testid="reset-password-submit-button"
+        >
           {isSubmitting ? 'Resetting password...' : 'Reset Password'}
         </button>
       </form>

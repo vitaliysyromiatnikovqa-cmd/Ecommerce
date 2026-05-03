@@ -44,6 +44,27 @@ function MailIcon() {
   );
 }
 
+function UserIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path
+        d="M12 12.25a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Z"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M4.75 20.25a7.25 7.25 0 0 1 14.5 0"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
 function LockIcon() {
   return (
     <svg aria-hidden="true" viewBox="0 0 24 24">
@@ -132,6 +153,8 @@ function ArrowLeftIcon() {
 
 function resolveIcon(icon) {
   switch (icon) {
+    case 'user':
+      return <UserIcon />;
     case 'mail':
       return <MailIcon />;
     case 'password':
@@ -145,6 +168,7 @@ function resolveIcon(icon) {
 
 export function AuthField({
   label,
+  labelAdornment,
   name,
   type = 'text',
   placeholder,
@@ -154,13 +178,18 @@ export function AuthField({
   autoComplete,
   icon = 'mail',
   toggleVisibility = false,
+  testId,
+  toggleTestId,
 }) {
   const [isVisible, setIsVisible] = useState(false);
   const resolvedType = toggleVisibility ? (isVisible ? 'text' : type) : type;
 
   return (
     <label className="auth-field">
-      <span className="auth-label">{label}</span>
+      <span className="auth-label-row">
+        <span className="auth-label">{label}</span>
+        {labelAdornment}
+      </span>
       <span className={error ? 'auth-input auth-input-error' : 'auth-input'}>
         <span className="auth-input-icon">{resolveIcon(icon)}</span>
         <input
@@ -171,6 +200,7 @@ export function AuthField({
           value={value}
           onChange={onChange}
           aria-invalid={Boolean(error)}
+          data-testid={testId ?? `auth-input-${name}`}
         />
         {toggleVisibility ? (
           <button
@@ -178,6 +208,7 @@ export function AuthField({
             type="button"
             onClick={() => setIsVisible((current) => !current)}
             aria-label={isVisible ? 'Hide password' : 'Show password'}
+            data-testid={toggleTestId ?? `${testId ?? `auth-input-${name}`}-toggle`}
           >
             <EyeIcon off={isVisible} />
           </button>
@@ -194,6 +225,8 @@ export function AuthShell({
   subtitle,
   children,
   footer,
+  shellBackTo,
+  shellBackLabel,
   backTo,
   backLabel,
   panelClassName = '',
@@ -203,7 +236,14 @@ export function AuthShell({
   return (
     <section className="auth-screen">
       <div className="auth-shell">
-        <Link className="auth-brand" to="/">
+        {shellBackTo && shellBackLabel ? (
+          <Link className="auth-shell-back-link" to={shellBackTo} data-testid="auth-shell-back-link">
+            <ArrowLeftIcon />
+            <span>{shellBackLabel}</span>
+          </Link>
+        ) : null}
+
+        <Link className="auth-brand" to="/" data-testid="auth-brand-link">
           <span className="auth-brand-mark">
             <GamepadIcon />
           </span>
@@ -214,7 +254,7 @@ export function AuthShell({
 
         <div className={panelClass}>
           {backTo && backLabel ? (
-            <Link className="auth-back-link" to={backTo}>
+            <Link className="auth-back-link" to={backTo} data-testid="auth-back-link">
               <ArrowLeftIcon />
               <span>{backLabel}</span>
             </Link>
@@ -228,7 +268,7 @@ export function AuthShell({
           {footer ? <div className="auth-panel-footer">{footer}</div> : null}
         </div>
 
-        <p className="auth-page-footer">© 2026 GameReason. All rights reserved.</p>
+        <p className="auth-page-footer">&copy; 2026 GameReason. All rights reserved.</p>
       </div>
     </section>
   );
