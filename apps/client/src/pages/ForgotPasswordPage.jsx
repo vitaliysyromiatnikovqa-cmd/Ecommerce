@@ -58,6 +58,7 @@ export function ForgotPasswordPage() {
   }
 
   return (
+<<<<<<< Updated upstream
     <AuthShell
       backTo="/login"
       backLabel="Back to Login"
@@ -127,5 +128,101 @@ export function ForgotPasswordPage() {
         </div>
       ) : null}
     </AuthShell>
+=======
+    <div className="auth-layout">
+      <section className="auth-card">
+        <div className="auth-copy">
+          <span className="eyebrow">Forgot Password</span>
+          <h1>Request a reset token for your GameReason account</h1>
+          <p>
+            Enter your email and we will generate a password reset token for
+            local and API testing.
+          </p>
+        </div>
+
+        <form className="auth-form" onSubmit={handleSubmit} noValidate>
+          <label className="field">
+            <span>Email</span>
+            <input
+              className={errors.email ? 'input-error' : ''}
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              autoComplete="email"
+              value={values.email}
+              onChange={handleChange}
+              aria-invalid={Boolean(errors.email)}
+              data-testid="forgot-password-email-input"
+            />
+            {errors.email ? <small className="error-text">{errors.email}</small> : null}
+          </label>
+
+          {formError ? <div className="form-error-banner">{formError}</div> : null}
+
+          {result ? (
+            <div className="auth-result-panel">
+              <p className="auth-result-message">{result.message}</p>
+
+              {result.resetToken ? (
+                <label className="field auth-readonly-field">
+                  <span>Reset token</span>
+                  <input
+                    type="text"
+                    value={result.resetToken}
+                    readOnly
+                    aria-readonly="true"
+                    className="auth-readonly-input"
+                    data-testid="forgot-password-reset-token"
+                  />
+                </label>
+              ) : null}
+
+              {result.expiresAt ? (
+                <p className="auth-helper-text auth-result-expiry">
+                  Expires at: {new Date(result.expiresAt).toLocaleString()}
+                </p>
+              ) : null}
+            </div>
+          ) : null}
+
+          <div className="stacked-actions auth-actions-stack">
+            <button
+              className="primary-button auth-submit auth-submit-wide"
+              type="submit"
+              disabled={isSubmitting}
+              data-testid="forgot-password-submit-button"
+            >
+              {isSubmitting ? 'Generating token...' : 'Send Reset Link'}
+            </button>
+
+            {result?.resetToken ? (
+              <Link
+                className="secondary-button auth-secondary-action"
+                to={`/reset-password?token=${encodeURIComponent(result.resetToken)}`}
+                data-testid="forgot-password-open-reset-link"
+              >
+                Open Reset Password
+              </Link>
+            ) : null}
+          </div>
+        </form>
+
+        <p className="auth-footer">
+          Don&apos;t have an account? <span>Create Account</span>
+        </p>
+      </section>
+
+      <aside className="auth-side-note">
+        <h2>Rate limited by design</h2>
+        <p>
+          You can create up to three reset requests within thirty seconds. The
+          fourth request is blocked with a rate-limit response.
+        </p>
+        <Link className="secondary-button" to="/login" data-testid="forgot-password-back-to-sign-in-link">
+          Back to Sign In
+        </Link>
+      </aside>
+    </div>
+>>>>>>> Stashed changes
   );
 }
